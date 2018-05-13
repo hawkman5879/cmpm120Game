@@ -2,9 +2,10 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 var monkas;
 var life;
 var air;
+var scale = .35;
 function preload() {
 	// preload assets
-game.load.image('ship', 'assets/img/ship.png');
+game.load.atlas('danny', 'assets/img/DannyDeDiver.png', 'assets/img/DannyDeDiver.json');
 game.load.atlas('robbie', 'assets/img/robbie.png', 'assets/img/robbie.json');
 }
 
@@ -17,16 +18,18 @@ function create() {
  		game.physics.enable(robot);
 	 	cursors = game.input.keyboard.createCursorKeys();
 		//Adds player character
-	 	monkas = game.add.sprite(100,550,'ship'); 
+	 	monkas = game.add.sprite(100,550,'danny', 'swimmer1'); 
 		game.physics.arcade.enable(monkas); //Charcater got some physics
-		//monkas.scale.setTo(-.1,.1); //flips
 		monkas.anchor.x = .5;
 		monkas.anchor.y = .5;
+		monkas.scale.setTo(scale,scale);
 
     	monkas.body.gravity.y = 2000;
     	monkas.body.collideWorldBounds = true;
+    	monkas.animations.add('swim', Phaser.Animation.generateFrameNames('swimmer', 1 , 6, '', 1), 10, true);
+    	monkas.animations.play('swim');
     	airText = game.add.text(16,320, 'Air: ' + air, { fontSize: '32px', fill: '#FDFEFE  ' });
-    	timer = game.time.events.loop(200, subAir,this);
+    	timer = game.time.events.loop(3000, subAir,this);
 		scoreText = game.add.text(16, 280, 'Score: 0', { fontSize: '32px', fill: '#FDFEFE  ' });
 		lifeText = game.add.text(200, 280, 'Life: ' + life, { fontSize: '32px', fill: '#FDFEFE  ' });
 	}
@@ -34,41 +37,55 @@ function create() {
     	
     	//Controls baddies enemy movemen
     	if(cursors.right.isDown && cursors.up.isDown){ //Polishes movement so you can press two cursors at once 
-    		monkas.body.velocity.y = -150;
-    		monkas.body.velocity.x = 150
+    		monkas.body.velocity.y = -125;
+    		monkas.body.velocity.x = 125;
+    		monkas.scale.setTo(scale,scale);
+    		monkas.animations.play('swim');
     	}
     	else if(cursors.left.isDown && cursors.up.isDown){
-    		monkas.body.velocity.y = -150;
-    		monkas.body.velocity.x = -150
-			//monkas.scale.setTo(-1,1);
+    		monkas.body.velocity.y = -125;
+    		monkas.body.velocity.x = -125
+    		monkas.scale.setTo(-scale,scale);
+    		monkas.animations.play('swim');
     	}
     	else if(cursors.right.isDown && cursors.down.isDown){
     		monkas.body.velocity.y = 100;
-    		monkas.body.velocity.x = 150;
+    		monkas.body.velocity.x = 125;
+    		monkas.scale.setTo(scale,scale);
+    		monkas.animations.play('swim');
     	}
     	else if(cursors.left.isDown && cursors.down.isDown){
     		monkas.body.velocity.y = 100;
-    		monkas.body.velocity.x = -150;
+    		monkas.body.velocity.x = -125;
+    		monkas.scale.setTo(-scale,scale);
+    		monkas.animations.play('swim');
     	}
 		
 		else if (cursors.right.isDown){ //move right
-			monkas.body.velocity.x = 150;
+			monkas.body.velocity.x = 125;
 			monkas.body.velocity.y = 0;
+			monkas.scale.setTo(scale,scale);
+			monkas.animations.play('swim');
 	    }
 		else if(cursors.left.isDown){ //move left
-			monkas.body.velocity.x = -150;
+			monkas.body.velocity.x = -125;
 			monkas.body.velocity.y = 0;
+			monkas.scale.setTo(-scale,scale);
+			monkas.animations.play('swim');
 		}
 		else if(cursors.up.isDown){
-			monkas.body.velocity.y = -150
+			monkas.body.velocity.y = -125;
+			monkas.animations.play('swim');
 		
 		}
 		else if(cursors.down.isDown){
-			monkas.body.velocity.y = 150;
+			monkas.body.velocity.y = 125;
+			monkas.animations.play('swim');
 		}
 		else{
 			monkas.body.velocity.x = 0;
 			monkas.body.velocity.y = 0;
+			monkas.animations.stop(null,true);
 		}
 		if(air == 0){
 			air = 100;
