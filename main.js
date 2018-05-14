@@ -4,22 +4,26 @@ var life;
 var air;
 var Mov = 300;
 var Up = 250;
-var scale = .22;
+var scale = .18;
+var bubbleS;
 function preload() {
 	// preload assets
 	game.load.atlas('danny', 'assets/img/DannyDeDiver.png', 'assets/img/DannyDeDiver.json');
-	game.load.atlas('robbie', 'assets/img/robbie.png', 'assets/img/robbie.json');
+	game.load.image('robbie', 'assets/img/bubble.png');
 	game.load.image('Back', 'assets/img/background.png');
 	game.load.image('Mid', 'assets/img/midground.png');
 	game.load.image('ground', 'assets/img/ground.png');
 	game.load.image('slant', 'assets/img/slant.png');
 	game.load.image('rock', 'assets/img/rock.png');
 	game.load.image('urchin', 'assets/img/urchin.png');
+	game.load.image('chest', 'assets/img/chest.png');
+	game.load.audio('bubbleS', ['assets/audio/Acid Bubble.wav']);
 }
 
 function create() {
 		console.log('GamePlay: create');
-      	air = 100;
+      bubbleS = game.add.audio('bubbleS');
+      air = 100;
         life = 100;
 		game.physics.startSystem(Phaser.Physics.Arcade);
 		var background1 = game.add.sprite(0, 0, 'Back');
@@ -84,7 +88,7 @@ function create() {
 
 
 	//rock placement
-	var rock = platforms.create(700, 546, 'rock');
+	var rock = platforms.create(700, 560, 'rock');
 	rock.body.immovable = true; 
 
 	rock = platforms.create(990	, 546, 'rock');
@@ -96,47 +100,38 @@ function create() {
 	rock = platforms.create(150, 325, 'rock');
 	rock.body.immovable = true;
 
-	rock = platforms.create(800, 500, 'rock');
-	rock.scale.y *= -1;
-	rock.body.immovable = true;
 
+	//makes urhin group
+	urchins = game.add.group();
 
-	//slant placement
-	var slant = platforms.create(0, 546, 'slant');
-	slant.body.immovable = true;
-
-	slant = platforms.create(600, 315 , 'slant');
-	slant.body.immovable = true;
-
-	slant = platforms.create(1000, 315, 'slant');
-	slant.scale.x *= -1;
-	slant.body.immovable = true;
-
-	slant = platforms.create(100, 125, 'slant');
-	slant.body.immovable = true;
-
+	//enable physics on platform group
+	urchins.enableBody = true;
 
 	//urchin spawns
-	var urchin = platforms.create(500, 100, 'urchin');
+	var urchin = urchins.create(500, 100, 'urchin');
 	urchin.scale.setTo(1.25, 1.25);
 	urchin.body.immovable = true;
 
-	urchin = platforms.create(790, 125, 'urchin');
+	urchin = urchins.create(790, 125, 'urchin');
 	urchin.scale.setTo(1.25, 1.25);
 	urchin.body.immovable = true;
 
-	urchin = platforms.create(200, 520, 'urchin');
+	urchin = urchins.create(200, 520, 'urchin');
 	urchin.scale.setTo(1.25, 1.25);
 	urchin.body.immovable = true;
 
-	urchin = platforms.create(1105, 520, 'urchin');
+	urchin = urchins.create(1105, 520, 'urchin');
 	urchin.scale.setTo(1.25, 1.25);
 	urchin.body.immovable = true;
- 		robot = game.add.sprite(500,300, 'robbie', 'walk1');
+ 		robot = game.add.sprite(500,300, 'robbie');
+ 		chest1 = game.add.sprite(1100, 100, 'chest');
+ 		chest1.scale.setTo(.3,.3);
+ 		robot.scale.setTo(.3,.3);
  		game.physics.enable(robot);
+ 		//game.physcis.enable('chest1');
 	 	cursors = game.input.keyboard.createCursorKeys();
 		//Adds player character
-	 	monkas = game.add.sprite(100,530,'danny', 'swimmer1'); 
+	 	monkas = game.add.sprite(100,500,'danny', 'swimmer1'); 
 		game.physics.arcade.enable(monkas); //Charcater got some physics
 		monkas.anchor.x = .5;
 		monkas.anchor.y = .5;
@@ -153,7 +148,7 @@ function create() {
 
 	}
 	function update() {
-    	
+    		var hitPlatform = game.physics.arcade.collide(monkas, platforms);
     	//Controls baddies enemy movemen
     	if(cursors.right.isDown && cursors.up.isDown){ //Polishes movement so you can press two cursors at once 
     		monkas.body.velocity.y = -Mov;
@@ -206,12 +201,17 @@ function create() {
 			monkas.body.velocity.y = 0;
 			monkas.animations.stop(null,true);
 		}
+		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
+			game.physics.arcade.overlap(monkas, chest1, endGame, null, this);
+		}
 		if(air == 0){
 			air = 100;
 			life = life - 1;
 			lifeText.text = 'Life: ' + life;
 		}
-		game.physics.arcade.overlap(monkas, robot, airF, null, this);
+		if(game.physics.arcade.overlap(monkas, robot, airF, null, this)){
+			bubbleS.play('', 0, 3, false);
+		}
 		
 	}
 	function subAir(){
@@ -221,4 +221,8 @@ function create() {
 	function airF(monkas, robot){
 		air = 100;
 		airText.text = 'Air: ' + air;
+
+	}
+	function endGame(monkas,chest){
+		endText = game.add.text(600,320, 'GG', { fontSize: '48px', fill: '#FDFEFE  ' });
 	}
