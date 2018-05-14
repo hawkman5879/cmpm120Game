@@ -1,4 +1,6 @@
-var game = new Phaser.Game(1200, 640, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(1200, 640, Phaser.AUTO);
+	
+//global variables 
 var monkas;
 var life;
 var air;
@@ -6,27 +8,76 @@ var Mov = 300;
 var Up = 250;
 var scale = .18;
 var bubbleS;
-function preload() {
-	// preload assets
-	game.load.atlas('danny', 'assets/img/DannyDeDiver.png', 'assets/img/DannyDeDiver.json');
-	game.load.image('robbie', 'assets/img/bubble.png');
-	game.load.image('Back', 'assets/img/background.png');
-	game.load.image('Mid', 'assets/img/midground.png');
-	game.load.image('ground', 'assets/img/ground.png');
-	game.load.image('slant', 'assets/img/slant.png');
-	game.load.image('rock', 'assets/img/rock.png');
-	game.load.image('urchin', 'assets/img/urchin.png');
-	game.load.image('chest', 'assets/img/chest.png');
-	game.load.audio('bubbleS', ['assets/audio/Acid Bubble.wav']);
+
+// define MainMenu state and methods
+var MainMenu = function(game) {};
+MainMenu.prototype = {
+	preload: function() {
+		console.log('MainMenu: preload');
+		
+		//loading assets
+		game.load.image('Back', 'assets/img/background.png');
+		game.load.image('Mid', 'assets/img/midground.png');
+	},
+	create: function() {
+		console.log('MainMenu: create');
+
+		//Background 1
+		var background1 = game.add.sprite(0, 0, 'Back');
+		background1.scale.setTo(2.5, 2.5);
+
+		//Background 2
+		var background2 = game.add.sprite(720, 0, 'Back');
+		background2.scale.setTo(2.5, 2.5);
+
+		//midground
+		var midground = game.add.sprite(0, 0, 'Mid');	
+		midground.scale.setTo(1.25, 1.25);
+
+		//Main beginning menu ----> just the text that shows up
+		game.add.text(150, 175, 'SUSHI HUNTERS', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 210, 'By Nick, Brian, and Marcos', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 255, 'PRESS SPACE TO START', { fontSize: '32px', fill: '#7B241C' });
+
+
+	},
+	update: function() {
+		// main menu logic
+		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+			game.state.start('GamePlay');
+		}
+	}
 }
 
-function create() {
+//define GamePlay state and methods
+var GamePlay = function(game) {};
+GamePlay.prototype = {
+	preload: function() {
+		console.log('GamePlay: preload');
+		
+		// preload assets
+		game.load.atlas('danny', 'assets/img/DannyDeDiver.png', 'assets/img/DannyDeDiver.json');
+		game.load.image('robbie', 'assets/img/bubble.png');
+		game.load.image('Back', 'assets/img/background.png');
+		game.load.image('Mid', 'assets/img/midground.png');
+		game.load.image('ground', 'assets/img/ground.png');
+		game.load.image('slant', 'assets/img/slant.png');
+		game.load.image('rock', 'assets/img/rock.png');
+		game.load.image('urchin', 'assets/img/urchin.png');
+		game.load.image('chest', 'assets/img/chest.png');
+		game.load.audio('bubbleS', ['assets/audio/Acid Bubble.wav']);
+	},
+
+	create: function() {
 		console.log('GamePlay: create');
-      bubbleS = game.add.audio('bubbleS');
-      air = 100;
-        life = 100;
-		game.physics.startSystem(Phaser.Physics.Arcade);
-		var background1 = game.add.sprite(0, 0, 'Back');
+
+    bubbleS = game.add.audio('bubbleS');
+    air = 100;
+    life = 100;
+
+	game.physics.startSystem(Phaser.Physics.Arcade);
+
+	var background1 = game.add.sprite(0, 0, 'Back');
 	background1.scale.setTo(2.5, 2.5);
 
 	//Background 2
@@ -128,7 +179,7 @@ function create() {
  		chest1.scale.setTo(.3,.3);
  		robot.scale.setTo(.3,.3);
  		game.physics.enable(robot);
- 		//game.physcis.enable('chest1');
+ 		//==game.physcis.enable('chest1');
 	 	cursors = game.input.keyboard.createCursorKeys();
 		//Adds player character
 	 	monkas = game.add.sprite(100,500,'danny', 'swimmer1'); 
@@ -145,10 +196,16 @@ function create() {
     	timer = game.time.events.loop(3000, subAir,this);
 		scoreText = game.add.text(16, 280, 'Score: 0', { fontSize: '32px', fill: '#FDFEFE  ' });
 		lifeText = game.add.text(200, 280, 'Life: ' + life, { fontSize: '32px', fill: '#FDFEFE  ' });
+		
+	},
 
-	}
-	function update() {
-    		var hitPlatform = game.physics.arcade.collide(monkas, platforms);
+	update: function() {
+		//collides players with platforms
+    	var hitPlatform = game.physics.arcade.collide(monkas, platforms);
+
+    	//touching chest gives game over
+   		game.physics.arcade.overlap(monkas, chest1, gameOver, null, this);
+
     	//Controls baddies enemy movemen
     	if(cursors.right.isDown && cursors.up.isDown){ //Polishes movement so you can press two cursors at once 
     		monkas.body.velocity.y = -Mov;
@@ -201,9 +258,9 @@ function create() {
 			monkas.body.velocity.y = 0;
 			monkas.animations.stop(null,true);
 		}
-		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-			game.physics.arcade.overlap(monkas, chest1, endGame, null, this);
-		}
+		//if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
+		//	game.physics.arcade.overlap(monkas, chest1, endGame, null, this);
+		//}
 		if(air == 0){
 			air = 100;
 			life = life - 1;
@@ -212,17 +269,70 @@ function create() {
 		if(game.physics.arcade.overlap(monkas, robot, airF, null, this)){
 			bubbleS.play('', 0, 3, false);
 		}
+
+		//Moves to game over scene
+		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+			game.state.start('GameOver');
+		}
 		
 	}
-	function subAir(){
-		air = air - 25;
-		airText.text = 'Air: ' + air;
-	}
-	function airF(monkas, robot){
-		air = 100;
-		airText.text = 'Air: ' + air;
+}
 
+// define GameOver state and methods
+var GameOver = function(game) {};
+GameOver.prototype = {
+	preload: function() {
+		console.log('GameOver: preload');
+
+		//loading assets
+		game.load.image('Back', 'assets/img/background.png');
+		game.load.image('Mid', 'assets/img/midground.png');
+
+	},
+	create: function() {
+		console.log('GameOver: create');
+
+		//Background 1
+		var background1 = game.add.sprite(0, 0, 'Back');
+		background1.scale.setTo(2.5, 2.5);
+
+		//Background 2
+		var background2 = game.add.sprite(720, 0, 'Back');
+		background2.scale.setTo(2.5, 2.5);
+
+		//midground
+		var midground = game.add.sprite(0, 0, 'Mid');	
+		midground.scale.setTo(1.25, 1.25);
+		
+		//says GAME OVER after gameplay
+		game.add.text(125, 150, 'GAME OVER', { fontSize: '64px', fill: '#7B241C' });
+
+	},
+	update: function() {
+		// GameOver logic
+		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+			game.state.start('MainMenu');
+		}
 	}
-	function endGame(monkas,chest){
-		endText = game.add.text(600,320, 'GG', { fontSize: '48px', fill: '#FDFEFE  ' });
-	}
+}
+
+function subAir(){
+	air = air - 25;
+	airText.text = 'Air: ' + air;
+}
+function airF(monkas, robot){
+	air = 100;
+	airText.text = 'Air: ' + air;
+
+}
+
+//Function that changes gameplay state to game over
+function gameOver(monkas, chest1) {
+	game.state.start('GameOver');
+}
+
+//add states to StateManager and start MainMenu
+game.state.add('MainMenu', MainMenu);
+game.state.add('GamePlay', GamePlay);
+game.state.add('GameOver', GameOver);
+game.state.start('MainMenu');
