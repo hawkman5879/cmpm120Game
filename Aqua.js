@@ -27,13 +27,8 @@ var game = new Phaser.Game(
 // Preload assets
 function preload() {
 	game.load.atlas('danny', 'assets/img/DannyDeDiver.png', 'assets/img/DannyDeDiver.json');
+		game.load.atlas('characters', 'assets/img/spritesheet.png', 'assets/img/sprites.json');
 		game.load.image('robbie', 'assets/img/bubble.png');
-		game.load.image('Back', 'assets/img/background.png');
-		game.load.image('Mid', 'assets/img/midground.png');
-		game.load.image('ground', 'assets/img/ground.png');
-		game.load.image('slant', 'assets/img/slant.png');
-		game.load.image('rock', 'assets/img/rock.png');
-		game.load.image('urchin', 'assets/img/urchin.png');
 		game.load.image('chest', 'assets/img/chest.png');
 		game.load.audio('bubbleS', ['assets/audio/Acid Bubble.wav']);
 		game.load.image('trident', 'assets/img/trident.png')
@@ -81,8 +76,11 @@ function create() {
     life = 100;
 
 	game.physics.startSystem(Phaser.Physics.Arcade);
-
-	
+		jelly = game.add.group();
+		jelly.enableBody = true;
+		var jellyfish = jelly.create(100,50,'characters', 'Jellyfish1');
+		jellyfish.scale.setTo(.125,.125);
+		game.physics.enable(jelly);
  		robot = game.add.sprite(500,300, 'robbie');
  		chest1 = game.add.sprite(1100, 100, 'chest');
  		chest1.scale.setTo(.3,.3);
@@ -102,6 +100,8 @@ function create() {
     	monkas.animations.add('swim', Phaser.Animation.generateFrameNames('swimmer', 1 , 6, '', 1), 10, true);
     	monkas.animations.add('swimIdle', Phaser.Animation.generateFrameNames('swimmer', 1 , 6, '', 1), 5, true);
     	monkas.animations.play('swim');
+    	jellyfish.animations.add('bounce', Phaser.Animation.generateFrameNames('Jellyfish', 1 , 2, '', 1), 2, true);
+    	jellyfish.animations.play('bounce');
     	airText = game.add.text(16,320, 'Air: ' + air, { fontSize: '32px', fill: '#FDFEFE  ' });
     	timer = game.time.events.loop(3000, subAir,this);
 		overheatText = game.add.text(16, 280, 'Overheat: 0', { fontSize: '32px', fill: '#FDFEFE  ' });
@@ -137,6 +137,8 @@ function update() {
 			touchUp();
 		}
 	}
+	if(game.physics.arcade.overlap(tridents, jelly, killJelly, null, this));
+	
 	if(cursors.right.isDown && cursors.up.isDown){ //Polishes movement so you can press two cursors at once 
     		monkas.body.velocity.y = -Mov;
     		monkas.body.velocity.x = Mov;
@@ -226,6 +228,9 @@ function airF(monkas, robot){
 	air = 100;
 	airText.text = 'Air: ' + air;
 
+}
+function killJelly(){
+	jelly.kill();
 }
 function touchDown() {
 	// Set touchDown to true, so we only trigger this once
