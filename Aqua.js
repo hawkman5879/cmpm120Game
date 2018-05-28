@@ -14,6 +14,7 @@ var bubbleS;
 var way = true;
 var overheat = false;
 var tooMuchS = 0;
+var trident;
 
 // Create a Phaser game instance
 var game = new Phaser.Game(
@@ -76,42 +77,40 @@ function create() {
     life = 100;
 
 	game.physics.startSystem(Phaser.Physics.Arcade);
-		jelly = game.add.group();
-		jelly.enableBody = true;
-		var jellyfish = jelly.create(100,50,'characters', 'Jellyfish1');
-		jellyfish.scale.setTo(.125,.125);
-		game.physics.enable(jelly);
- 		robot = game.add.sprite(500,300, 'robbie');
- 		chest1 = game.add.sprite(1100, 100, 'chest');
- 		chest1.scale.setTo(.3,.3);
- 		robot.scale.setTo(.3,.3);
- 		game.physics.enable(robot);
- 		//==game.physcis.enable('chest1');
-	 	cursors = game.input.keyboard.createCursorKeys();
+	jelly = game.add.group();
+	jelly.enableBody = true;
+	var jellyfish = jelly.create(100,50,'characters', 'Jellyfish1');
+	jellyfish.scale.setTo(.125,.125);
+	game.physics.enable(jelly);
+ 	robot = game.add.sprite(500,300, 'robbie');
+ 	chest1 = game.add.sprite(1100, 100, 'chest');
+ 	chest1.scale.setTo(.3,.3);
+ 	robot.scale.setTo(.3,.3);
+ 	game.physics.enable(robot);
+ 	//==game.physcis.enable('chest1');
+	 cursors = game.input.keyboard.createCursorKeys();
 		//Adds player character
-	 	monkas = game.add.sprite(100,500,'danny', 'swimmer1'); 
-		game.physics.arcade.enable(monkas); //Charcater got some physics
-		monkas.anchor.x = .5;
-		monkas.anchor.y = .5;
-		monkas.scale.setTo(scale,scale);
+	monkas = game.add.sprite(100,500,'danny', 'swimmer1'); 
+	game.physics.arcade.enable(monkas); //Charcater got some physics
+	monkas.anchor.x = .5;
+	monkas.anchor.y = .5;
+	monkas.scale.setTo(scale,scale);
 
-    	monkas.body.gravity.y = 2000;
-    	monkas.body.collideWorldBounds = true;
-    	monkas.animations.add('swim', Phaser.Animation.generateFrameNames('swimmer', 1 , 6, '', 1), 10, true);
-    	monkas.animations.add('swimIdle', Phaser.Animation.generateFrameNames('swimmer', 1 , 6, '', 1), 5, true);
-    	monkas.animations.play('swim');
-    	jellyfish.animations.add('bounce', Phaser.Animation.generateFrameNames('Jellyfish', 1 , 2, '', 1), 2, true);
-    	jellyfish.animations.play('bounce');
-    	airText = game.add.text(16,320, 'Air: ' + air, { fontSize: '32px', fill: '#FDFEFE  ' });
-    	timer = game.time.events.loop(3000, subAir,this);
-		overheatText = game.add.text(16, 280, 'Overheat: 0', { fontSize: '32px', fill: '#FDFEFE  ' });
-		lifeText = game.add.text(200, 280, 'Life: ' + life, { fontSize: '32px', fill: '#FDFEFE  ' });
+    monkas.body.gravity.y = 2000;
+    monkas.body.collideWorldBounds = true;
+    monkas.animations.add('swim', Phaser.Animation.generateFrameNames('swimmer', 1 , 6, '', 1), 10, true);
+    monkas.animations.add('swimIdle', Phaser.Animation.generateFrameNames('swimmer', 1 , 6, '', 1), 5, true);
+    monkas.animations.play('swim');
+    jellyfish.animations.add('bounce', Phaser.Animation.generateFrameNames('Jellyfish', 1 , 2, '', 1), 2, true);
+    jellyfish.animations.play('bounce');
+    airText = game.add.text(16,320, 'Air: ' + air, { fontSize: '32px', fill: '#FDFEFE  ' });
+    timer = game.time.events.loop(3000, subAir,this);
+	overheatText = game.add.text(16, 280, 'Overheat: 0', { fontSize: '32px', fill: '#FDFEFE  ' });
+	lifeText = game.add.text(200, 280, 'Life: ' + life, { fontSize: '32px', fill: '#FDFEFE  ' });
 		
 }
 
-function resettrident(trident) {
-	trident.kill();
-}
+
 
 // Update
 function update() {
@@ -137,7 +136,8 @@ function update() {
 			touchUp();
 		}
 	}
-	if(game.physics.arcade.overlap(tridents, jelly, killJelly, null, this));
+	if(game.physics.arcade.overlap(trident, jelly, killJelly, null, this));
+		
 	
 	if(cursors.right.isDown && cursors.up.isDown){ //Polishes movement so you can press two cursors at once 
     		monkas.body.velocity.y = -Mov;
@@ -205,7 +205,7 @@ function update() {
 			bubbleS.play('', 0, 3, false);
 		}
 		if(tooMuchS > 0){
-			tooMuchS = tooMuchS - 5;
+			tooMuchS = tooMuchS - 25;
 			overheatText.text = 'Overheat: ' + tooMuchS;
 		}
 		if(tooMuchS <= 0 ){
@@ -229,8 +229,12 @@ function airF(monkas, robot){
 	airText.text = 'Air: ' + air;
 
 }
+function resettrident(trident) {
+	trident.kill();
+}
 function killJelly(){
 	jelly.kill();
+	trident.kill();
 }
 function touchDown() {
 	// Set touchDown to true, so we only trigger this once
@@ -245,9 +249,9 @@ function touchUp() {
 
 function firetrident() {
 	// Get the first trident that's inactive, by passing 'false' as a parameter
-	tooMuchS = tooMuchS + 250;
+	tooMuchS = tooMuchS + 1500;
 	overheatText.text = 'Overheat: ' + tooMuchS;
-	var trident = tridents.getFirstExists(false);
+	trident = tridents.getFirstExists(false);
 	if (trident) {
 		
 		if(way == true){
