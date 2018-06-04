@@ -115,6 +115,9 @@ function create() {
 // Update
 function update() {
 
+	radians = game.physics.arcade.angleBetween(this.jellyfish, monkas);  
+	degrees = radians * (180/Math.PI);  
+	game.physics.arcade.velocityFromAngle(degrees, 300, this.jellyfish.body.velocity);  
 	// Loop over the keys
 	for (var index in phaserKeys) {
 		// Save a reference to the current key
