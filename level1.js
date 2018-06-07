@@ -67,11 +67,9 @@ Level1.prototype = {
 	    //initializes layer collision
 	    map.setCollisionByExclusion([]);
 
-
 	    //enemies being added
 	    enemies = game.add.group();
 	    enemies.enableBody = true;	//anything in group will have physics applied
-
 	    map.createFromObjects('enemies', 1275, 'MOBSP', 'Jellyfish1', true, true, enemies, Jellyfish);
 	    map.createFromObjects('enemies', 1270, 'MOBSP', 'eelrock11', true, true, enemies);
 	    map.createFromObjects('enemies', 1300, 'MOBSP', 'urchin', true, true, enemies);
@@ -81,6 +79,7 @@ Level1.prototype = {
 	    map.createFromObjects('furniture', 1253, 'atlasItems', 'box_2x1', true, true, furniture);
 	    map.createFromObjects('furniture', 1252, 'atlasItems', 'box', true, true, furniture);
 	    map.createFromObjects('furniture', 1250, 'atlasItems', 'barrel_side', true, true, furniture);
+	    map.createFromObjects('furniture', 1298, 'atlasItems', 'table', true, true, furniture);
 	    map.createFromObjects('furniture', 1301, 'atlasItems', 'plant', true, true, furniture);
 
 	    //creates bubbles/ hitboxes
@@ -92,9 +91,6 @@ Level1.prototype = {
 	    bubble.body.setSize(40, 60, 50, 30);
 	    bubble = bubbles.create(4400, 1300, 'atlasItems', 'bubble');
 	    bubble.body.setSize(40, 60, 50, 30);
-
-	    
-	    //bubble.body.setSize(100, 100);
 	    bubbles.scale.setTo(0.5, 0.5);
 	    
 	    //Divers Code stuff
@@ -250,7 +246,7 @@ Level1.prototype = {
 			}
 
 			if(life <= 0) {
-				game.state.start('GameOver');
+				game.state.start('GameOver1');
 			}
 
 	        //temp state switcher
@@ -272,8 +268,4 @@ Level1.prototype = {
 	}
 
 }
-function subLife(monkas,enemies){
-		enemies.destroy();
-		life = life - 25;
-		lifeText.text = "Life: " + life;	
-}
+

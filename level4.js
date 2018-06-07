@@ -176,6 +176,13 @@ Level4.prototype = {
 
         //BRIAN'S CODE GOES HERE
 
+
+        //GameOver state changer
+     	if(life <= 0) {
+			game.state.start('GameOver4');
+		}
+
+
         //temp state switcher
         if(hitdoor == true) {
 			game.state.start('GameOver');

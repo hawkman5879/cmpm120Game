@@ -1,5 +1,5 @@
-var GameOver = function(game) {};
-GameOver.prototype = {
+var GameOver1 = function(game) {};
+GameOver1.prototype = {
 	preload: function() {
 		console.log('MainMenu: preload');
 
@@ -20,6 +20,90 @@ GameOver.prototype = {
 			air = 100;
 			life = 100;
 			game.state.start('Level1');
+		}
+
+
+	}
+}
+
+var GameOver2 = function(game) {};
+GameOver2.prototype = {
+	preload: function() {
+		console.log('MainMenu: preload');
+
+
+	},
+	create: function() {
+		console.log('MainMenu: create');
+		game.add.text(115, 210, 'TEMP GAMEOVER STATE', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 255, 'PRESS R TO START', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 300, 'Goes Back To Lvl 1 ATM', { fontSize: '32px', fill: '#7B241C' });
+
+
+	},
+	update: function() {
+		// main menu logic
+		
+		if(game.input.keyboard.isDown(Phaser.Keyboard.R)) {
+			air = 100;
+			life = 100;
+			game.state.start('Level2');
+		}
+
+			
+	}
+}
+
+var GameOver3 = function(game) {};
+GameOver3.prototype = {
+	preload: function() {
+		console.log('MainMenu: preload');
+
+
+	},
+	create: function() {
+		console.log('MainMenu: create');
+		game.add.text(115, 210, 'TEMP GAMEOVER STATE', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 255, 'PRESS R TO START', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 300, 'Goes Back To Lvl 1 ATM', { fontSize: '32px', fill: '#7B241C' });
+
+
+	},
+	update: function() {
+		// main menu logic
+		
+		if(game.input.keyboard.isDown(Phaser.Keyboard.R)) {
+			air = 100;
+			life = 100;
+			game.state.start('Level3');
+		}
+
+			
+	}
+}
+
+var GameOver4 = function(game) {};
+GameOver4.prototype = {
+	preload: function() {
+		console.log('MainMenu: preload');
+
+
+	},
+	create: function() {
+		console.log('MainMenu: create');
+		game.add.text(115, 210, 'TEMP GAMEOVER STATE', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 255, 'PRESS R TO START', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 300, 'Goes Back To Lvl 1 ATM', { fontSize: '32px', fill: '#7B241C' });
+
+
+	},
+	update: function() {
+		// main menu logic
+		
+		if(game.input.keyboard.isDown(Phaser.Keyboard.R)) {
+			air = 100;
+			life = 100;
+			game.state.start('Level4');
 		}
 
 			
@@ -86,6 +170,13 @@ function airF(monkas, bubbles){
 
 }
 
+//when enemies hit player
+function subLife(monkas,enemies){
+		enemies.destroy();
+		life = life - 25;
+		lifeText.text = "Life: " + life;	
+}
+
 
 //add states to StateManager and start MainMenu
 game.state.add('MainMenu', MainMenu);
@@ -94,5 +185,8 @@ game.state.add('Level1', Level1);
 game.state.add('Level2', Level2);
 game.state.add('Level3', Level3);
 game.state.add('Level4', Level4);
-game.state.add('GameOver', GameOver);
+game.state.add('GameOver1', GameOver1);
+game.state.add('GameOver2', GameOver2);
+game.state.add('GameOver3', GameOver3);
+game.state.add('GameOver4', GameOver4);
 game.state.start('Level1');
