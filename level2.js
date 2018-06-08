@@ -45,10 +45,10 @@ Level2.prototype = {
 	    enemies = game.add.group();
 	    enemies.enableBody = true;	//anything in group will have physics applied	    
 	    map.createFromObjects('enemies', 1275, 'MOBSP', 'Jellyfish1', true, true, enemies, Jellyfish);
-	    map.createFromObjects('enemies', 1270, 'MOBSP', 'eelrock11', true, true, enemies);
 	    map.createFromObjects('enemies', 1300, 'MOBSP', 'urchin', true, true, enemies);
 	    map.createFromObjects('enemies', 1281, 'MOBSP', 'shark1', true, true, enemies, shark);
-
+	   	map.createFromObjects('enemies', 1269, 'MOBSP', 'eelrock10', true, true, enemies, eel);
+	   
 	    //creates furniture/other single background pieces
 	    furniture = game.add.group();
 	    map.createFromObjects('furniture', 1253, 'MOBSP', 'box_2x1', true, true, furniture);
@@ -65,6 +65,7 @@ Level2.prototype = {
 	    map.createFromObjects('furniture', 1305, 'MOBSP', 'bench', true, true, furniture);
 	    map.createFromObjects('furniture', 1251, 'MOBSP', 'bigdrawers', true, true, furniture);
 
+
 	    //creates bubbles/ hitboxes
 	    bubbles = game.add.group();
 	    bubbles.enableBody = true; //sets physics on bubbles
@@ -74,11 +75,34 @@ Level2.prototype = {
 	    bubble.body.setSize(40, 60, 50, 30);
 	    bubble = bubbles.create(100, 1700, 'atlasItems', 'bubble');
 	    bubble.body.setSize(40, 60, 50, 30);
+	    bubble = bubbles.create(1500, 1600, 'atlasItems', 'bubble');
+	    bubble.body.setSize(40, 60, 50, 30);
 	    bubble = bubbles.create(3350, 2100, 'atlasItems', 'bubble');
 	    bubble.body.setSize(40, 60, 50, 30);
 	    bubble = bubbles.create(4700, 200, 'atlasItems', 'bubble');
 	    bubble.body.setSize(40, 60, 50, 30);
 	    bubbles.scale.setTo(0.5, 0.5);
+
+	    //CONSUMABLES:
+	    sushi = game.add.group();
+	    sushi.enableBody = true;
+	    //map.createFromObjects('sushi', 1300, 'MOBSP', 'sushi1', true, true, sushi);
+	    //map.createFromObjects('sushi', 1300, 'MOBSP', 'sushi2', true, true, sushi);
+
+	    // sush = sushi.create(660, 5030, 'MOBSP', 'sushi1');
+	    // sush.body.setSize(10, 10, 0, 0); //for hit box
+	    // sush = sushi.create(800, 4030, 'MOBSP', 'sushi1');
+	    // sush.body.setSize(10, 10, 0, 0);
+
+
+	    //CREATRES KEY. YEEEEE BOOOIIIII
+	    keys = game.add.group();
+	    keys.enableBody = true;
+	    map.createFromObjects('keys', 1305, 'MOBSP', 'key', true, true, keys);
+
+
+
+	    sushi.scale.setTo(0.25, 0.25);
 
 	    //monkas stuff
 	    monkas = game.add.sprite(50,1300,'danny', 'swimmer1'); 
@@ -96,10 +120,6 @@ Level2.prototype = {
 	    //camera
 	    game.camera.follow(monkas, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
-
-
-
-
 	    //camera for health bar and air
 	    lifeText = game.add.text(20, 20, "Life: " + life, {font: "24px Arial", fill: "#ffffff", align: "left"});
 	    lifeText.fixedToCamera = true;
@@ -110,10 +130,6 @@ Level2.prototype = {
 	    airText.cameraOffset.setTo(20, 40);
 
 	    timer = game.time.events.loop(3000, subAir,this);
-
-
-
-
 
 	    //more diver stuff
 	    monkas.body.gravity.y = 2000;
@@ -138,6 +154,8 @@ Level2.prototype = {
 
 		//when player hits enemey
 		game.physics.arcade.overlap(monkas,enemies,subLife,null,this);	
+
+
 
         //Controls baddies enemy movemen
         if(cursors.right.isDown && cursors.up.isDown){ //Polishes movement so you can press two cursors at once 
@@ -210,9 +228,23 @@ Level2.prototype = {
 			game.state.start('Level3');
 		}
 
+		//if diver touches bubble
 		if(game.physics.arcade.overlap(monkas, bubbles, airF, null, this)) {
 			//noises effect goes here
 		}
+
+		if(game.physics.arcade.overlap(monkas, sushi, eatSushi, null, this)) {
+			//noises effect goes here
+			sushi.destroy();
+		}
+
+	},
+
+	render: function() {
+
+    	game.debug.physicsGroup(enemies);
+
+
 	}
 }
 

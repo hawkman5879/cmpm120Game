@@ -6,7 +6,7 @@ Level4.prototype = {
 	preload: function() {
 	    game.load.tilemap('level4', 'assets/img/level4_tiledmap.json', null, Phaser.Tilemap.TILED_JSON);
 	    game.load.spritesheet('tilesheet', 'assets/img/tilespritesheet.png', 32, 32);
-	    game.load.spritesheet('Anime', 'assets/img/MOBspriteSheet.png')
+	    game.load.atlas('MOBSP', 'assets/img/MOBSP.png', 'assets/img/MOBSP.json');
 	    game.load.atlas('atlasItems', 'assets/img/tilemapspritesheet.png','assets/img/tilemapspritesheet.json');
 	    game.load.atlas('danny', 'assets/img/DannyDeDiver.png', 'assets/img/DannyDeDiver.json');
 	},
@@ -37,30 +37,71 @@ Level4.prototype = {
 	    //enables layer collision
 	    map.setCollisionByExclusion([]);
 
-	    //adding smaller objects
+	    //ENEMIES:
+	    //enemies being added
+	    enemies = game.add.group();
+	    enemies.enableBody = true;	//anything in group will have physics applied	    
+	    map.createFromObjects('enemies', 1275, 'MOBSP', 'Jellyfish1', true, true, enemies, Jellyfish);
+	    map.createFromObjects('enemies', 1300, 'MOBSP', 'urchin', true, true, enemies);
+	    map.createFromObjects('enemies', 1279, 'MOBSP', 'shark1', true, true, enemies, shark);
+	   	map.createFromObjects('enemies', 1269, 'MOBSP', 'eelrock10', true, true, enemies, eel);
+
+
+
 	    //FURNITURE:
-	    var smallItem = game.add.group()
-	    var drawers = smallItem.create(50, 730, 'atlasItems', 'bigdrawers');
-	    drawers = smallItem.create(190, 753, 'atlasItems', 'drawers');
-	    var table = smallItem.create(280, 555, 'atlasItems', 'table');
-	    table = smallItem.create(1850, 663, 'atlasItems', 'table');
-	    //BOXES:
-	    var box = smallItem.create(510, 960, 'atlasItems', 'box_2x1');
-	    box = smallItem.create(510, 940, 'atlasItems', 'barrel_side');
-	    box = smallItem.create(530, 940, 'atlasItems', 'barrel_side');
-	    box = smallItem.create(550, 940, 'atlasItems', 'barrel_side');
-	    box = smallItem.create(570, 975, 'atlasItems', 'barrel_side');
-	    box = smallItem.create(1024, 874, 'atlasItems', 'box_2x1');
-	    box = smallItem.create(1024, 834, 'atlasItems', 'box');
-	    box = smallItem.create(740, 384, 'atlasItems', 'box');
-	    box = smallItem.create(720, 400, 'atlasItems', 'barrel_side');
-	    box = smallItem.create(760, 360, 'atlasItems', 'barrel_side');
-	    box = smallItem.create(1000, 230, 'atlasItems', 'barrel_side');
-	    box = smallItem.create(1825, 150, 'atlasItems', 'box_2x1');
-	    box = smallItem.create(1665, 150, 'atlasItems', 'box_2x1');
-	    box = smallItem.create(1665, 750, 'atlasItems', 'box');
-	    box = smallItem.create(1350, 385, 'atlasItems', 'box');
-	    smallItem.scale.setTo(1.5, 1.5);
+	    //creates furniture/other single background pieces
+	    furniture = game.add.group();
+	    map.createFromObjects('furniture', 1253, 'MOBSP', 'box_2x1', true, true, furniture);
+	    map.createFromObjects('furniture', 1252, 'MOBSP', 'box', true, true, furniture);
+	    map.createFromObjects('furniture', 1250, 'MOBSP', 'barrel_side', true, true, furniture);
+	    map.createFromObjects('furniture', 1301, 'MOBSP', 'plant', true, true, furniture);
+	    map.createFromObjects('furniture', 1307, 'MOBSP', 'cup', true, true, furniture);
+	    map.createFromObjects('furniture', 1308, 'MOBSP', 'safe', true, true, furniture);
+		map.createFromObjects('furniture', 1251, 'MOBSP', 'bigdrawers', true, true, furniture);
+	    map.createFromObjects('furniture', 1259, 'MOBSP', 'drawers', true, true, furniture);
+	    map.createFromObjects('furniture', 1305, 'MOBSP', 'bench', true, true, furniture);
+	 	map.createFromObjects('furniture', 1306, 'MOBSP', 'coat', true, true, furniture);
+	    map.createFromObjects('furniture', 1257, 'MOBSP', 'coathanger', true, true, furniture);
+	    map.createFromObjects('furniture', 1303, 'MOBSP', 'treasures', true, true, furniture);
+	    map.createFromObjects('furniture', 1304, 'MOBSP', 'treasures_vase', true, true, furniture);
+
+	    //creates bubbles/ hitboxes
+	    bubbles = game.add.group();
+	    bubbles.enableBody = true; //sets physics on bubbles
+	    var bubble = bubbles.create(2850, 720, 'atlasItems', 'bubble');
+	    bubble.body.setSize(40, 60, 30, 50);
+	    bubble = bubbles.create(950, 200, 'atlasItems', 'bubble');
+	    bubble.body.setSize(40, 60, 50, 30);	
+	    bubble = bubbles.create(250, 2350, 'atlasItems', 'bubble');
+	    bubble.body.setSize(40, 60, 50, 30);
+	    bubble = bubbles.create(3250, 1800, 'atlasItems', 'bubble');
+	    bubble.body.setSize(40, 60, 50, 30);
+	    bubble = bubbles.create(3250, 2450, 'atlasItems', 'bubble');
+	    bubble.body.setSize(40, 60, 50, 30);
+	    bubble = bubbles.create(3800, 460, 'atlasItems', 'bubble');
+	    bubble.body.setSize(40, 60, 50, 30);
+	    bubble = bubbles.create(4200, 460, 'atlasItems', 'bubble');
+	    bubble.body.setSize(40, 60, 50, 30);
+	    bubble = bubbles.create(4600, 1800, 'atlasItems', 'bubble');
+	    bubble.body.setSize(40, 60, 50, 30);
+	    bubbles.scale.setTo(0.5, 0.5);
+
+	    //CONSUMABLES:
+	    sushi = game.add.group();
+	    sushi.enableBody = true;
+	    map.createFromObjects('sushi', 1283, 'MOBSP', 'sushi1', true, true, sushi);
+	    map.createFromObjects('sushi', 1284, 'MOBSP', 'sushi2', true, true, sushi);
+
+	    // sush = sushi.create(660, 5030, 'MOBSP', 'sushi1');
+	    // sush.body.setSize(10, 10, 0, 0); //for hit box
+	    // sush = sushi.create(800, 4030, 'MOBSP', 'sushi1');
+	    // sush.body.setSize(10, 10, 0, 0);
+
+
+	    //CREATRES KEY. YEEEEE BOOOIIIII
+	    keys = game.add.group();
+	    keys.enableBody = true;
+	    map.createFromObjects('keys', 1278, 'MOBSP', 'key', true, true, keys);
 
 	    //monkas stuff
 	    monkas = game.add.sprite(100,1400,'danny', 'swimmer1'); 
@@ -78,6 +119,22 @@ Level4.prototype = {
 	    //camera
 	    game.camera.follow(monkas, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
+	    //camera for health bar and air
+	    lifeText = game.add.text(20, 20, "Life: " + life, {font: "24px Arial", fill: "#ffffff", align: "left"});
+	    lifeText.fixedToCamera = true;
+	    lifeText.cameraOffset.setTo(20, 20);
+
+	   	airText = game.add.text(20, 20, "Air: " + air, {font: "24px Arial", fill: "#ffffff", align: "left"});
+	    airText.fixedToCamera = true;
+	    airText.cameraOffset.setTo(20, 40);
+
+	   	keyText = game.add.text(20, 20, "keys: " + gotKey, {font: "24px Arial", fill: "#ffffff", align: "left"});
+	    keyText.fixedToCamera = true;
+	    keyText.cameraOffset.setTo(20, 60);
+
+	    timer = game.time.events.loop(3000, subAir,this);
+
+	    //more diver stuff
 	    monkas.body.gravity.y = 2000;
 	    monkas.body.collideWorldBounds = true;
 	    monkas.animations.add('swim', Phaser.Animation.generateFrameNames('swimmer', 1 , 6, '', 1), 10, true);
@@ -99,28 +156,15 @@ Level4.prototype = {
 		//when player hits door
 		var hitdoor = game.physics.arcade.collide(monkas, door);
 
-		//Loop over the keys ------------> FOR FIRING GUN
-		//for (var index in phaserKeys) {
-		//	//Save a reference to the current key
-		//	var key = phaserKeys[index];
-		//	// If the key was just pressed, fire a trident
-		//	if (key.justDown && overheat == false) {
-		//		firetrident();
-		//	}
-		//}
-/*
-		//Game.input.activePointer is either the first finger touched, or the mouse
-		if (game.input.activePointer.isDown) {
-			// We'll manually keep track if the pointer wasn't already down
-			if (!mouseTouchDown) {
-				touchDown();
-			}
-		} else {
-			if (mouseTouchDown) {
-				touchUp();
-			}
-		}
-*/
+		//when player hits enemey
+		game.physics.arcade.overlap(monkas,enemies,subLife,null,this);	
+
+		//Player eats sushi
+		game.physics.arcade.overlap(monkas,sushi,eatSushi,null,this);
+
+		//Player Picks up key
+		//game.physics.arcade.overlap(monkas,keys,getKey3,null,this);
+
 		//PLAYER MOVEMENT:
         //Controls baddies enemy movemen
         if(cursors.right.isDown && cursors.up.isDown){ //Polishes movement so you can press two cursors at once 
@@ -176,17 +220,31 @@ Level4.prototype = {
 
         //BRIAN'S CODE GOES HERE
 
+        //AIR 
+	    if(air <= 0) {
+			life = life - .2;
+			lifeText.text = 'Life: ' + life;
+		}
+
+		if(game.physics.arcade.overlap(monkas, bubbles, airF, null, this)) {
+			//noises effect goes here
+		}
 
         //GameOver state changer
      	if(life <= 0) {
 			game.state.start('GameOver4');
 		}
 
-
         //temp state switcher
         if(hitdoor == true) {
 			game.state.start('GameOver');
 		}
+
+	},
+
+	render: function() {
+
+    	game.debug.physicsGroup(enemies);
 
 
 	}

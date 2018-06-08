@@ -172,10 +172,22 @@ function airF(monkas, bubbles){
 
 //when enemies hit player
 function subLife(monkas,enemies){
-		enemies.destroy();
-		life = life - 25;
-		lifeText.text = "Life: " + life;	
+	enemies.destroy();
+	life = life - 25;
+	lifeText.text = "Life: " + life;	
 }
+
+function eatSushi(monkas, sushi) {
+	sushi.destroy();
+	if(life == 100){
+		life = life + 0;
+	} else if(life >= 76) {
+		life = life = 100;
+	} else if(life <= 75) {
+		life = life + 25;
+	}
+}
+
 
 
 //add states to StateManager and start MainMenu

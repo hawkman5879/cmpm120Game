@@ -15,14 +15,25 @@ var Up = 250;
 var scale = .18;
 var camera;
 var door;
+
 var enemies;
+var eels;
+
 var furniture;
 var greens;
 var plant;
+
 var bubbles;
+
+var sushi;
+var sush;
+var keys;
+var key;
+var gotKey = 0;
+
 var box;
+
 var chest;
 var life = 100;
 var lifeText;
-var jelly1;
 var tridents;

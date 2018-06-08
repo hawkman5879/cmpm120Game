@@ -18,7 +18,7 @@ Level1.prototype = {
 
 	preload: function() {
 	    game.load.tilemap('level1', 'assets/img/level1_tiledmap.json', null, Phaser.Tilemap.TILED_JSON);
-	    game.load.spritesheet('tilesheet', 'assets/img/tilespritesheet.png', 16, 16);
+	    game.load.spritesheet('tilesheet', 'assets/img/tilespritesheet.png', 32, 32);
 	    game.load.atlas('MOBSP', 'assets/img/MOBSP.png', 'assets/img/MOBSP.json');
 	    game.load.atlas('atlasItems', 'assets/img/tilemapspritesheet.png','assets/img/tilemapspritesheet.json');
 	    game.load.atlas('danny', 'assets/img/DannyDeDiver.png', 'assets/img/DannyDeDiver.json');
@@ -71,7 +71,7 @@ Level1.prototype = {
 	    enemies = game.add.group();
 	    enemies.enableBody = true;	//anything in group will have physics applied
 	    map.createFromObjects('enemies', 1275, 'MOBSP', 'Jellyfish1', true, true, enemies, Jellyfish);
-	    map.createFromObjects('enemies', 1270, 'MOBSP', 'eelrock11', true, true, enemies);
+	    map.createFromObjects('enemies', 1322, 'MOBSP', 'eelrock10', true, true, enemies, eel);
 	    map.createFromObjects('enemies', 1300, 'MOBSP', 'urchin', true, true, enemies);
 
 	    //furniture being added
@@ -265,7 +265,14 @@ Level1.prototype = {
 			//	openChest(chest);
 			//}
 
-	}
+	},
+	//FOR DEBUGGING
+	// render: function() {
+
+ 	//    game.debug.physicsGroup(enemies);
+
+
+	// }
 
 }
 
