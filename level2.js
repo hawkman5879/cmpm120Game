@@ -6,6 +6,7 @@ Level2.prototype = {
 	preload: function() {
 	    game.load.tilemap('level2', 'assets/img/level2_tiledmap.json', null, Phaser.Tilemap.TILED_JSON);
 	    game.load.spritesheet('tilesheet', 'assets/img/tilespritesheet.png', 32, 32);
+	    game.load.atlas('bars', 'assets/img/bars.png', 'assets/img/bars.json');
 	    game.load.atlas('MOBSP', 'assets/img/MOBSP.png', 'assets/img/MOBSP.json')
 	    game.load.atlas('atlasItems', 'assets/img/tilemapspritesheet.png','assets/img/tilemapspritesheet.json');
 	    game.load.atlas('danny', 'assets/img/DannyDeDiver.png', 'assets/img/DannyDeDiver.json');
@@ -15,7 +16,7 @@ Level2.prototype = {
    		
    		//starts physics function
 	    game.physics.startSystem(Phaser.Physics.ARCADE);
-
+	    air = 100;
 	    //background
 	    background = game.add.sprite(0, 0,'atlasItems', 'starback');
 	    background.scale.setTo(3,3);
@@ -86,23 +87,8 @@ Level2.prototype = {
 	    //CONSUMABLES:
 	    sushi = game.add.group();
 	    sushi.enableBody = true;
-	    //map.createFromObjects('sushi', 1300, 'MOBSP', 'sushi1', true, true, sushi);
-	    //map.createFromObjects('sushi', 1300, 'MOBSP', 'sushi2', true, true, sushi);
-
-	    // sush = sushi.create(660, 5030, 'MOBSP', 'sushi1');
-	    // sush.body.setSize(10, 10, 0, 0); //for hit box
-	    // sush = sushi.create(800, 4030, 'MOBSP', 'sushi1');
-	    // sush.body.setSize(10, 10, 0, 0);
-
-
-	    //CREATRES KEY. YEEEEE BOOOIIIII
-	    keys = game.add.group();
-	    keys.enableBody = true;
-	    map.createFromObjects('keys', 1305, 'MOBSP', 'key', true, true, keys);
-
-
-
-	    sushi.scale.setTo(0.25, 0.25);
+	    map.createFromObjects('sushi', 1283, 'MOBSP', 'sushi1', true, true, sushi);
+	    map.createFromObjects('sushi', 1284, 'MOBSP', 'sushi2', true, true, sushi);
 
 	    //monkas stuff
 	    monkas = game.add.sprite(50,1300,'danny', 'swimmer1'); 
@@ -120,16 +106,65 @@ Level2.prototype = {
 	    //camera
 	    game.camera.follow(monkas, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
-	    //camera for health bar and air
-	    lifeText = game.add.text(20, 20, "Life: " + life, {font: "24px Arial", fill: "#ffffff", align: "left"});
-	    lifeText.fixedToCamera = true;
-	    lifeText.cameraOffset.setTo(20, 20);
+	    //makes the hearts
+	    hearts = game.add.group();
+	    heart1 = hearts.create(20, 20, 'bars', 'heart');
+	    heart1.fixedToCamera = true;
+	    heart1.cameraOffset.setTo(20, 20);
+	    heart1.scale.setTo(.5, .5);
+	   	heart2 = hearts.create(20, 20, 'bars', 'heart');
+	    heart2.fixedToCamera = true;
+	    heart2.cameraOffset.setTo(70, 20);
+	    heart2.scale.setTo(.5, .5);
+	    heart3 = hearts.create(20, 20, 'bars', 'heart');
+	    heart3.fixedToCamera = true;
+	    heart3.cameraOffset.setTo(120, 20);
+	    heart3.scale.setTo(.5, .5);
+	    heart4 = hearts.create(20, 20, 'bars', 'heart');
+	    heart4.fixedToCamera = true;
+	    heart4.cameraOffset.setTo(170, 20);
+	    heart4.scale.setTo(.5, .5);
+		
+	    airbars = game.add.group();
+	    airbar1 = airbars.create(20, 20, 'bars', 'airbar9');
+	    airbar1.fixedToCamera = true;
+		airbar1.cameraOffset.setTo(20, 70);
+		airbar1.scale.setTo(.35, .25);
+		airbar2 = airbars.create(20, 20, 'bars', 'airbar8');
+	    airbar2.fixedToCamera = true;
+		airbar2.cameraOffset.setTo(20, 70);
+		airbar2.scale.setTo(.35, .25);
+		airbar3 = airbars.create(20, 20, 'bars', 'airbar7');
+	    airbar3.fixedToCamera = true;
+		airbar3.cameraOffset.setTo(20, 70);
+		airbar3.scale.setTo(.35, .25);
+		airbar4 = airbars.create(20, 20, 'bars', 'airbar6');
+	    airbar4.fixedToCamera = true;
+		airbar4.cameraOffset.setTo(20, 70);
+		airbar4.scale.setTo(.35, .25);
+	    airbar5 = airbars.create(20, 20, 'bars', 'airbar5');
+	    airbar5.fixedToCamera = true;
+		airbar5.cameraOffset.setTo(20, 70);
+		airbar5.scale.setTo(.35, .25);
+		airbar6 = airbars.create(20, 20, 'bars', 'airbar4');
+	    airbar6.fixedToCamera = true;
+		airbar6.cameraOffset.setTo(20, 70);
+		airbar6.scale.setTo(.35, .25);
+		airbar7 = airbars.create(20, 20, 'bars', 'airbar3');
+	    airbar7.fixedToCamera = true;
+		airbar7.cameraOffset.setTo(20, 70);
+		airbar7.scale.setTo(.35, .25);
+		airbar8 = airbars.create(20, 20, 'bars', 'airbar2');
+	    airbar8.fixedToCamera = true;
+		airbar8.cameraOffset.setTo(20, 70);
+		airbar8.scale.setTo(.35, .25);
+		airbar9 = airbars.create(20, 20, 'bars', 'airbar1');
+	    airbar9.fixedToCamera = true;
+		airbar9.cameraOffset.setTo(20, 70);
+		airbar9.scale.setTo(.35, .25);
 
-	   	airText = game.add.text(20, 20, "Air: " + air, {font: "24px Arial", fill: "#ffffff", align: "left"});
-	    airText.fixedToCamera = true;
-	    airText.cameraOffset.setTo(20, 40);
-
-	    timer = game.time.events.loop(3000, subAir,this);
+	    //timer for air drop
+	    timer = game.time.events.loop(2000, subAir,this);
 
 	    //more diver stuff
 	    monkas.body.gravity.y = 2000;
@@ -155,66 +190,169 @@ Level2.prototype = {
 		//when player hits enemey
 		game.physics.arcade.overlap(monkas,enemies,subLife,null,this);	
 
+		//player eats sushi
+		if(game.physics.arcade.overlap(monkas, sushi, eatSushi, null, this)) {
+			//noises effect goes here
+		}
 
+		//adjusts health bar
+		if(75 >= life >= 50){
+			heart4.destroy();
+		}
 
-        //Controls baddies enemy movemen
-        if(cursors.right.isDown && cursors.up.isDown){ //Polishes movement so you can press two cursors at once 
+		//Code for decreasing hearts
+		if(life > 50 && life <= 75){
+		heart4.alpha = .0;
+		}
+		if(life > 25 && life <= 50){
+			heart3.alpha = .0;
+		}
+		if(life > 0 && life <= 25){
+			heart2.alpha = .0;
+		}
+		if(life == 100) {
+			heart4.alpha = 1;
+			heart3.alpha = 1;
+			heart2.alpha = 1;
+		}
+
+		//Code for decreasing the air bar
+		if(air == 87.5) {
+			airbar9.alpha = .0;
+		} 
+		if(air == 75) {
+			airbar8.alpha = .0;
+		}
+		if(air == 62.5) {
+			airbar7.alpha = .0;
+		}
+		if(air == 50) {
+			airbar6.alpha = .0;
+		}
+		if(air == 37.5) {
+			airbar5.alpha = .0;
+		}
+		if(air == 25) {
+			airbar4.alpha = .0;
+		}
+		if(air == 12.5) {
+			airbar3.alpha = .0;
+		}
+		if(air == 0) {
+			airbar2.alpha = .0;
+		}
+		if(air == 100) {
+			airbar2.alpha = 1;
+			airbar3.alpha = 1;
+			airbar4.alpha = 1;
+			airbar5.alpha = 1;
+			airbar6.alpha = 1;
+			airbar7.alpha = 1;
+			airbar8.alpha = 1;
+			airbar9.alpha = 1;
+		}
+
+		//Player movement controls
+        if(cursors.right.isDown && cursors.up.isDown && air > 0){ //Polishes movement so you can press two cursors at once 
             monkas.body.velocity.y = -Mov;
             monkas.body.velocity.x = Mov;
             monkas.scale.setTo(scale,scale);
             monkas.animations.play('swim');
         }
-        else if(cursors.left.isDown && cursors.up.isDown){
+        else if(cursors.left.isDown && cursors.up.isDown && air > 0){
             monkas.body.velocity.y = -Mov;
             monkas.body.velocity.x = -Mov
             monkas.scale.setTo(-scale,scale);
             monkas.animations.play('swim');
         }
-        else if(cursors.right.isDown && cursors.down.isDown){
+        else if(cursors.right.isDown && cursors.down.isDown && air > 0){
             monkas.body.velocity.y = Up;
             monkas.body.velocity.x = Mov;
             monkas.scale.setTo(scale,scale);
             monkas.animations.play('swim');
         }
-        else if(cursors.left.isDown && cursors.down.isDown){
+        else if(cursors.left.isDown && cursors.down.isDown && air > 0){
             monkas.body.velocity.y = Up;
             monkas.body.velocity.x = -Mov;
             monkas.scale.setTo(-scale,scale);
             monkas.animations.play('swim');
-        } 
-        else if (cursors.right.isDown){ //move right
+        }
+        else if (cursors.right.isDown && air > 0){ //move right
             monkas.body.velocity.x = Mov;
             monkas.body.velocity.y = 0;
             monkas.scale.setTo(scale,scale);
             monkas.animations.play('swim');
         }
-        else if(cursors.left.isDown){ //move left
+        else if(cursors.left.isDown && air > 0) { //move left
             monkas.body.velocity.x = -Mov;
             monkas.body.velocity.y = 0;
             monkas.scale.setTo(-scale,scale);
             monkas.animations.play('swim');
         }
-        else if(cursors.up.isDown){
+        else if(cursors.up.isDown && air > 0){
             monkas.body.velocity.y = -Mov;
             monkas.animations.play('swim');
+        
         }
-        else if(cursors.down.isDown){
+        else if(cursors.down.isDown && air > 0){
             monkas.body.velocity.y = Mov;
             monkas.animations.play('swim');
         }
         else{
             monkas.body.velocity.x = 0;
             monkas.body.velocity.y = 0;
-            monkas.animations.stop(null,true);
         }
 
-
-        //BRIANS CODE GOES HERE
+        //if players out of air then he moves slower
+         if(cursors.right.isDown && cursors.up.isDown && air <= 0){ //Polishes movement so you can press two cursors at once 
+            monkas.body.velocity.y = -Mo;
+            monkas.body.velocity.x = Mo;
+            monkas.scale.setTo(scale,scale);
+            monkas.animations.play('swim');
+        }
+        else if(cursors.left.isDown && cursors.up.isDown && air <= 0){
+            monkas.body.velocity.y = -Mo;
+            monkas.body.velocity.x = -Mo;
+            monkas.scale.setTo(-scale,scale);
+            monkas.animations.play('swim');
+        }
+        else if(cursors.right.isDown && cursors.down.isDown && air <= 0){
+            monkas.body.velocity.y = U;
+            monkas.body.velocity.x = Mo;
+            monkas.scale.setTo(scale,scale);
+            monkas.animations.play('swim');
+        }
+        else if(cursors.left.isDown && cursors.down.isDown && air <= 0){
+            monkas.body.velocity.y = U;
+            monkas.body.velocity.x = -Mo;
+            monkas.scale.setTo(-scale,scale);
+            monkas.animations.play('swim');
+        }
+        else if (cursors.right.isDown && air <= 0){ //move right
+            monkas.body.velocity.x = Mo;
+            monkas.body.velocity.y = 0;
+            monkas.scale.setTo(scale,scale);
+            monkas.animations.play('swim');
+        }
+        else if(cursors.left.isDown && air <= 0) { //move left
+            monkas.body.velocity.x = -Mo;
+            monkas.body.velocity.y = 0;
+            monkas.scale.setTo(-scale,scale);
+            monkas.animations.play('swim');
+        }
+        else if(cursors.up.isDown && air <= 0){
+            monkas.body.velocity.y = -Mo;
+            monkas.animations.play('swim');
+        
+        }
+        else if(cursors.down.isDown && air <= 0){
+            monkas.body.velocity.y = Mo;
+            monkas.animations.play('swim');
+        }
 
         //AIR 
 	    if(air <= 0) {
-			life = life - .2;
-			lifeText.text = 'Life: ' + life;
+			life = life - .18;
 		}
 
         //GameOver state changer
@@ -222,8 +360,7 @@ Level2.prototype = {
 			game.state.start('GameOver2');
 		}
 
-
-                //temp state switcher
+		//state switcher
         if(hitdoor == true) {
 			game.state.start('Level3');
 		}
@@ -233,18 +370,10 @@ Level2.prototype = {
 			//noises effect goes here
 		}
 
-		if(game.physics.arcade.overlap(monkas, sushi, eatSushi, null, this)) {
-			//noises effect goes here
-			sushi.destroy();
-		}
-
 	},
 
-	render: function() {
-
-    	game.debug.physicsGroup(enemies);
-
-
-	}
+	//render: function() {
+    //	game.debug.physicsGroup(enemies);
+	//}
 }
 

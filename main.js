@@ -1,3 +1,89 @@
+//MAIN MENU STATE
+// define MainMenu state and methods
+var MainMenu = function(game) {};
+MainMenu.prototype = {
+	preload: function() {
+		console.log('MainMenu: preload');
+		
+		//loading assets
+		game.load.image('Back', 'assets/img/background.png');
+		game.load.image('Mid', 'assets/img/midground.png');
+	},
+	create: function() {
+		console.log('MainMenu: create');
+
+		//midground
+		midground = game.add.sprite(0, 0, 'Mid');	
+		midground.scale.setTo(3, 3);
+
+		//Main beginning menu ----> just the text that shows up
+		game.add.text(150, 175, 'SUSHI HUNTERS', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 210, 'By Nick, Brian, and Marcos', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 255, 'PRESS R TO START', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 255, 'PRESS C for credits', { fontSize: '32px', fill: '#7B241C' });
+
+	},
+	update: function() {
+		// main menu logic
+		if(game.input.keyboard.isDown(Phaser.Keyboard.R)) {
+			game.state.start('Story');
+		}
+		//goes to credits state
+		if(game.input.keyboard.isDown(Phaser.Keyboard.C)) {
+			game.state.start('credits');
+		}
+	}
+}
+
+//CREDITS STATE
+var credits = function(game) {};
+credits.prototype = {
+	preload: function() {
+		console.log('MainMenu: preload');
+
+	},
+	create: function() {
+		console.log('MainMenu: create');
+		game.add.text(115, 210, 'TEMP CREDITS STATE', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 255, 'PRESS R TO START', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 300, 'Goes Back to MainMenu', { fontSize: '32px', fill: '#7B241C' });
+
+
+	},
+	update: function() {
+		//state switching logic
+		if(game.input.keyboard.isDown(Phaser.Keyboard.R)) {
+			game.state.start('MainMenu');
+		}
+
+			
+	}
+}
+
+//STORY STATE
+var Story = function(game) {};
+Story.prototype = {
+	preload: function() {
+		console.log('MainMenu: preload');
+		game.load.image('background', 'assets/img/TitleScreen.png');
+
+	},
+	create: function() {
+		console.log('MainMenu: create');
+		game.add.text(115, 210, 'TEMP STORY STATE', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 255, 'PRESS R TO START', { fontSize: '32px', fill: '#7B241C' });
+
+		var background = game.add.sprite(0, 0, 'background');
+	},
+	update: function() {
+		// main menu logic
+		if(game.input.keyboard.isDown(Phaser.Keyboard.R)) {
+			game.state.start('Level1');
+		}
+	}
+}
+
+//GAMEOVER 1 STATE
 var GameOver1 = function(game) {};
 GameOver1.prototype = {
 	preload: function() {
@@ -21,11 +107,10 @@ GameOver1.prototype = {
 			life = 100;
 			game.state.start('Level1');
 		}
-
-
 	}
 }
 
+//GAMEOVER 2 State
 var GameOver2 = function(game) {};
 GameOver2.prototype = {
 	preload: function() {
@@ -48,17 +133,15 @@ GameOver2.prototype = {
 			air = 100;
 			life = 100;
 			game.state.start('Level2');
-		}
-
-			
+		}		
 	}
 }
 
+//GAMEOVER 3 State
 var GameOver3 = function(game) {};
 GameOver3.prototype = {
 	preload: function() {
 		console.log('MainMenu: preload');
-
 
 	},
 	create: function() {
@@ -76,12 +159,11 @@ GameOver3.prototype = {
 			air = 100;
 			life = 100;
 			game.state.start('Level3');
-		}
-
-			
+		}	
 	}
 }
 
+//GAMEOVER 4 State
 var GameOver4 = function(game) {};
 GameOver4.prototype = {
 	preload: function() {
@@ -104,87 +186,56 @@ GameOver4.prototype = {
 			air = 100;
 			life = 100;
 			game.state.start('Level4');
+		}		
+	}
+}
+
+//Ending State
+var ending = function(game) {};
+ending.prototype = {
+	preload: function() {
+		console.log('MainMenu: preload');
+
+
+	},
+	create: function() {
+		console.log('MainMenu: create');
+		game.add.text(115, 210, 'TEMP ending STATE', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 255, 'PRESS R TO START', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 300, 'Goes Back To MainMenu', { fontSize: '32px', fill: '#7B241C' });
+
+
+	},
+	update: function() {
+		//end game logic
+		if(game.input.keyboard.isDown(Phaser.Keyboard.R)) {
+			game.state.start('MainMenu');
 		}
-
-			
+	
 	}
-}
-
-
-
-function openChest(chest) {
-	chest.destroy();
-}
-
-function firetrident() {
-	// Get the first trident that's inactive, by passing 'false' as a parameter
-	tooMuchS = tooMuchS + 250;
-	overheatText.text = 'Overheat: ' + tooMuchS;
-	var trident = tridents.getFirstExists(false);
-	if (trident) {
-		
-		if(way == true){
-		// If we have a trident, set it to the starting position
-		trident.reset(monkas.x + 50, monkas.y + 12);
-		// Give it a velocity of -500 so it starts shooting
-		trident.body.velocity.x = 400;
-		trident.scale.setTo(.5,.5);
-	}
-		else {
-		trident.reset(monkas.x-50, monkas.y + 12);
-		// Give it a velocity of -500 so it starts shooting
-		trident.body.velocity.x = -400;
-		trident.scale.setTo(-.5,.5);
-		}
-	}
-
-}
-
-function resettrident(trident) {
-	trident.kill();
-}
-
-function killJelly(){
-	jelly.kill();
-}
-function touchDown() {
-	// Set touchDown to true, so we only trigger this once
-	mouseTouchDown = true;
-		firetrident();	
-}
-
-function touchUp() {
-	// Set touchDown to false, so we can trigger touchDown on the next click
-	mouseTouchDown = false;
 }
 
 //AIR FUNCTIONS:
 function subAir(){
-	air = air - 20;
-	airText.text = 'Air: ' + air;
+	air = air - 12.5;
 }
 
 function airF(monkas, bubbles){
 	air = 100;
-	airText.text = 'Air: ' + air;
-
 }
 
 //when enemies hit player
 function subLife(monkas,enemies){
 	enemies.destroy();
 	life = life - 25;
-	lifeText.text = "Life: " + life;	
 }
 
 function eatSushi(monkas, sushi) {
 	sushi.destroy();
 	if(life == 100){
-		life = life + 0;
-	} else if(life >= 76) {
-		life = life = 100;
-	} else if(life <= 75) {
-		life = life + 25;
+		life = life;
+	} else{
+		life = 100;
 	}
 }
 
@@ -192,6 +243,7 @@ function eatSushi(monkas, sushi) {
 
 //add states to StateManager and start MainMenu
 game.state.add('MainMenu', MainMenu);
+game.state.add('credits', credits);
 game.state.add('Story', Story);
 game.state.add('Level1', Level1);
 game.state.add('Level2', Level2);
@@ -201,4 +253,5 @@ game.state.add('GameOver1', GameOver1);
 game.state.add('GameOver2', GameOver2);
 game.state.add('GameOver3', GameOver3);
 game.state.add('GameOver4', GameOver4);
+game.state.add('ending', ending);
 game.state.start('Level1');

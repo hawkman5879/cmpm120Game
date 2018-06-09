@@ -1,36 +1,22 @@
 //LEVEL 1 STATE
 
-//FOR SHOOTING
-// Init
-function init() {
-	// Listen to space & enter keys
-	var keys = [Phaser.KeyCode.SPACEBAR, Phaser.KeyCode.ENTER];
-	// Create Phaser.Key objects for listening to the state
-	phaserKeys = game.input.keyboard.addKeys(keys);
-	// Capture these keys to stop the browser from receiving this event
-	game.input.keyboard.addKeyCapture(keys);
-}
-
-
-
 var Level1 = function(game) {};
 Level1.prototype = {
 
 	preload: function() {
 	    game.load.tilemap('level1', 'assets/img/level1_tiledmap.json', null, Phaser.Tilemap.TILED_JSON);
 	    game.load.spritesheet('tilesheet', 'assets/img/tilespritesheet.png', 32, 32);
+	    game.load.atlas('bars', 'assets/img/bars.png', 'assets/img/bars.json');
 	    game.load.atlas('MOBSP', 'assets/img/MOBSP.png', 'assets/img/MOBSP.json');
 	    game.load.atlas('atlasItems', 'assets/img/tilemapspritesheet.png','assets/img/tilemapspritesheet.json');
 	    game.load.atlas('danny', 'assets/img/DannyDeDiver.png', 'assets/img/DannyDeDiver.json');
 	},
 
-
-
 	create: function() {
 	   	
 		//starts physics 
 	    game.physics.startSystem(Phaser.Physics.ARCADE);
-
+	    air = 100;
 	    //BACKGROUND:
 	    //background Top half
 	    background = game.add.tileSprite(0, 0, game.width, game.height, 'atlasItems', 'background');
@@ -109,48 +95,71 @@ Level1.prototype = {
 	    //camera
 	    game.camera.follow(monkas, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
+	    //CONSUMABLES:
+	    sushi = game.add.group();
+	    sushi.enableBody = true;
+	    map.createFromObjects('sushi', 1336, 'MOBSP', 'sushi1', true, true, sushi);
+	    map.createFromObjects('sushi', 1337, 'MOBSP', 'sushi2', true, true, sushi);
 
-
-
-
-
-	    //Trident firing code obtained from Sabatino Masala on codecaptain.io
-		// Create the group using the group factory
-		tridents = game.add.group();
-		// To move the sprites later on, we have to enable the body
-		tridents.enableBody = true;
-		// We're going to set the body type to the ARCADE physics, since we don't need any advanced physics
-		tridents.physicsBodyType = Phaser.Physics.ARCADE;
-		/*
-			This will create 20 sprites and add it to the stage. They're inactive and invisible, but they're there for later use.
-			We only have 20 trident bullets available, and will 'clean' and reset they're off the screen.
-			This way we save on precious resources by not constantly adding & removing new sprites to the stage
-		*/
-		tridents.createMultiple(20, 'trident');
-
-		tridents.callAll('events.onOutOfBounds.add', 'events.onOutOfBounds', resettrident);
-		// Same as above, set the anchor of every sprite to 0.5, 1.0
-		tridents.callAll('anchor.setTo', 'anchor', 0.5, 1.0);
-
-		// This will set 'checkWorldBounds' to true on all sprites in the group
-		tridents.setAll('checkWorldBounds', true);
-
-
-
-
-
-
-
-	    //camera for health bar and air
-	    lifeText = game.add.text(20, 20, "Life: " + life, {font: "24px Arial", fill: "#ffffff", align: "left"});
-	    lifeText.fixedToCamera = true;
-	    lifeText.cameraOffset.setTo(20, 20);
-
-	   	airText = game.add.text(20, 20, "Air: " + air, {font: "24px Arial", fill: "#ffffff", align: "left"});
-	    airText.fixedToCamera = true;
-	    airText.cameraOffset.setTo(20, 40);
-
-	    timer = game.time.events.loop(3000, subAir,this);
+	    //makes the hearts
+	    hearts = game.add.group();
+	    heart1 = hearts.create(20, 20, 'bars', 'heart');
+	    heart1.fixedToCamera = true;
+	    heart1.cameraOffset.setTo(20, 20);
+	    heart1.scale.setTo(.5, .5);
+	   	heart2 = hearts.create(20, 20, 'bars', 'heart');
+	    heart2.fixedToCamera = true;
+	    heart2.cameraOffset.setTo(70, 20);
+	    heart2.scale.setTo(.5, .5);
+	    heart3 = hearts.create(20, 20, 'bars', 'heart');
+	    heart3.fixedToCamera = true;
+	    heart3.cameraOffset.setTo(120, 20);
+	    heart3.scale.setTo(.5, .5);
+	    heart4 = hearts.create(20, 20, 'bars', 'heart');
+	    heart4.fixedToCamera = true;
+	    heart4.cameraOffset.setTo(170, 20);
+	    heart4.scale.setTo(.5, .5);
+		
+	    airbars = game.add.group();
+	    airbar1 = airbars.create(20, 20, 'bars', 'airbar9');
+	    airbar1.fixedToCamera = true;
+		airbar1.cameraOffset.setTo(20, 70);
+		airbar1.scale.setTo(.35, .25);
+		airbar2 = airbars.create(20, 20, 'bars', 'airbar8');
+	    airbar2.fixedToCamera = true;
+		airbar2.cameraOffset.setTo(20, 70);
+		airbar2.scale.setTo(.35, .25);
+		airbar3 = airbars.create(20, 20, 'bars', 'airbar7');
+	    airbar3.fixedToCamera = true;
+		airbar3.cameraOffset.setTo(20, 70);
+		airbar3.scale.setTo(.35, .25);
+		airbar4 = airbars.create(20, 20, 'bars', 'airbar6');
+	    airbar4.fixedToCamera = true;
+		airbar4.cameraOffset.setTo(20, 70);
+		airbar4.scale.setTo(.35, .25);
+	    airbar5 = airbars.create(20, 20, 'bars', 'airbar5');
+	    airbar5.fixedToCamera = true;
+		airbar5.cameraOffset.setTo(20, 70);
+		airbar5.scale.setTo(.35, .25);
+		airbar6 = airbars.create(20, 20, 'bars', 'airbar4');
+	    airbar6.fixedToCamera = true;
+		airbar6.cameraOffset.setTo(20, 70);
+		airbar6.scale.setTo(.35, .25);
+		airbar7 = airbars.create(20, 20, 'bars', 'airbar3');
+	    airbar7.fixedToCamera = true;
+		airbar7.cameraOffset.setTo(20, 70);
+		airbar7.scale.setTo(.35, .25);
+		airbar8 = airbars.create(20, 20, 'bars', 'airbar2');
+	    airbar8.fixedToCamera = true;
+		airbar8.cameraOffset.setTo(20, 70);
+		airbar8.scale.setTo(.35, .25);
+		airbar9 = airbars.create(20, 20, 'bars', 'airbar1');
+	    airbar9.fixedToCamera = true;
+		airbar9.cameraOffset.setTo(20, 70);
+		airbar9.scale.setTo(.35, .25);
+	    
+	    //timer for air drop
+	    timer = game.time.events.loop(2000, subAir,this);
 
 	    //ANIMATIONS:
 	    //DIVER:
@@ -176,97 +185,188 @@ Level1.prototype = {
 			var hitdoor = game.physics.arcade.collide(monkas, door);
 
 			//when player hits enemey
-			game.physics.arcade.overlap(monkas,enemies,subLife,null,this);	
+			game.physics.arcade.overlap(monkas,enemies,subLife,null,this);
 
-			//when player opens chest
-			//var openchest = game.physics.arcade.overlap(monkas, chest);
+			//when player eats sushi
+			if(game.physics.arcade.overlap(monkas, sushi, eatSushi, null, this)) {
+				//noises effect goes here
+			}
 
-			//ANIMATIONS:
-			//jelly1.callAll('play', null, 'jelmov1');
+			//Code for decreasing hearts
+			if(life > 50 && life <= 75){
+			heart4.alpha = .0;
+			}
+			if(life > 25 && life <= 50){
+				heart3.alpha = .0;
+			}
+			if(life > 0 && life <= 25){
+				heart2.alpha = .0;
+			}
+			if(life == 100) {
+				heart4.alpha = 1;
+				heart3.alpha = 1;
+				heart2.alpha = 1;
+			}
 
-			//Movement for jellyfish
+			//Code for decreasing the air bar
+			if(air == 87.5) {
+				airbar9.alpha = .0;
+			} 
+			if(air == 75) {
+				airbar8.alpha = .0;
+			}
+			if(air == 62.5) {
+				airbar7.alpha = .0;
+			}
+			if(air == 50) {
+				airbar6.alpha = .0;
+			}
+			if(air == 37.5) {
+				airbar5.alpha = .0;
+			}
+			if(air == 25) {
+				airbar4.alpha = .0;
+			}
+			if(air == 12.5) {
+				airbar3.alpha = .0;
+			}
+			if(air == 0) {
+				airbar2.alpha = .0;
+			}
+			if(air == 100) {
+				airbar2.alpha = 1;
+				airbar3.alpha = 1;
+				airbar4.alpha = 1;
+				airbar5.alpha = 1;
+				airbar6.alpha = 1;
+				airbar7.alpha = 1;
+				airbar8.alpha = 1;
+				airbar9.alpha = 1;
+			}
 
-
-	        //Controls baddies enemy movemen
-	        if(cursors.right.isDown && cursors.up.isDown){ //Polishes movement so you can press two cursors at once 
+			//controls player movement
+	        if(cursors.right.isDown && cursors.up.isDown && air > 0){ //Polishes movement so you can press two cursors at once 
 	            monkas.body.velocity.y = -Mov;
 	            monkas.body.velocity.x = Mov;
 	            monkas.scale.setTo(scale,scale);
 	            monkas.animations.play('swim');
 	        }
-	        else if(cursors.left.isDown && cursors.up.isDown){
+	        else if(cursors.left.isDown && cursors.up.isDown && air > 0){
 	            monkas.body.velocity.y = -Mov;
 	            monkas.body.velocity.x = -Mov
 	            monkas.scale.setTo(-scale,scale);
 	            monkas.animations.play('swim');
 	        }
-	        else if(cursors.right.isDown && cursors.down.isDown){
+	        else if(cursors.right.isDown && cursors.down.isDown && air > 0){
 	            monkas.body.velocity.y = Up;
 	            monkas.body.velocity.x = Mov;
 	            monkas.scale.setTo(scale,scale);
 	            monkas.animations.play('swim');
 	        }
-	        else if(cursors.left.isDown && cursors.down.isDown){
+	        else if(cursors.left.isDown && cursors.down.isDown && air > 0){
 	            monkas.body.velocity.y = Up;
 	            monkas.body.velocity.x = -Mov;
 	            monkas.scale.setTo(-scale,scale);
 	            monkas.animations.play('swim');
 	        }
-	        else if (cursors.right.isDown){ //move right
+	        else if (cursors.right.isDown && air > 0){ //move right
 	            monkas.body.velocity.x = Mov;
 	            monkas.body.velocity.y = 0;
 	            monkas.scale.setTo(scale,scale);
 	            monkas.animations.play('swim');
 	        }
-	        else if(cursors.left.isDown){ //move left
+	        else if(cursors.left.isDown && air > 0) { //move left
 	            monkas.body.velocity.x = -Mov;
 	            monkas.body.velocity.y = 0;
 	            monkas.scale.setTo(-scale,scale);
 	            monkas.animations.play('swim');
 	        }
-	        else if(cursors.up.isDown){
+	        else if(cursors.up.isDown && air > 0){
 	            monkas.body.velocity.y = -Mov;
 	            monkas.animations.play('swim');
 	        
 	        }
-	        else if(cursors.down.isDown){
+	        else if(cursors.down.isDown && air > 0){
 	            monkas.body.velocity.y = Mov;
 	            monkas.animations.play('swim');
 	        }
 	        else{
 	            monkas.body.velocity.x = 0;
 	            monkas.body.velocity.y = 0;
-	            monkas.animations.stop(null,true);
+	        }
+
+	        //out of air player will move slower
+	         if(cursors.right.isDown && cursors.up.isDown && air <= 0){ //Polishes movement so you can press two cursors at once 
+	            monkas.body.velocity.y = -Mo;
+	            monkas.body.velocity.x = Mo;
+	            monkas.scale.setTo(scale,scale);
+	            monkas.animations.play('swim');
+	        }
+	        else if(cursors.left.isDown && cursors.up.isDown && air <= 0){
+	            monkas.body.velocity.y = -Mo;
+	            monkas.body.velocity.x = -Mo;
+	            monkas.scale.setTo(-scale,scale);
+	            monkas.animations.play('swim');
+	        }
+	        else if(cursors.right.isDown && cursors.down.isDown && air <= 0){
+	            monkas.body.velocity.y = U;
+	            monkas.body.velocity.x = Mo;
+	            monkas.scale.setTo(scale,scale);
+	            monkas.animations.play('swim');
+	        }
+	        else if(cursors.left.isDown && cursors.down.isDown && air <= 0){
+	            monkas.body.velocity.y = U;
+	            monkas.body.velocity.x = -Mo;
+	            monkas.scale.setTo(-scale,scale);
+	            monkas.animations.play('swim');
+	        }
+	        else if (cursors.right.isDown && air <= 0){ //move right
+	            monkas.body.velocity.x = Mo;
+	            monkas.body.velocity.y = 0;
+	            monkas.scale.setTo(scale,scale);
+	            monkas.animations.play('swim');
+	        }
+	        else if(cursors.left.isDown && air <= 0) { //move left
+	            monkas.body.velocity.x = -Mo;
+	            monkas.body.velocity.y = 0;
+	            monkas.scale.setTo(-scale,scale);
+	            monkas.animations.play('swim');
+	        }
+	        else if(cursors.up.isDown && air <= 0){
+	            monkas.body.velocity.y = -Mo;
+	            monkas.animations.play('swim');
+	        
+	        }
+	        else if(cursors.down.isDown && air <= 0){
+	            monkas.body.velocity.y = Mo;
+	            monkas.animations.play('swim');
 	        }
 
 	        //AIR 
 	        if(air <= 0){
-				life = life - .2;
-				lifeText.text = 'Life: ' + life;
+				life = life - .18;
+				//lifeText.text = 'Life: ' + life;
 			}
 
+			//GameOver state changer
 			if(life <= 0) {
 				game.state.start('GameOver1');
 			}
 
-	        //temp state switcher
+	        //state switcher
         	if(hitdoor == true) {
 				game.state.start('Level2');
 			}
 
-			//if player touches enemy
-
+			//if player touches bubbles
 			if(game.physics.arcade.overlap(monkas, bubbles, airF, null, this)) {
 
 			}
 
-			//function for opening chest
-			//if(openchest == true && game.input.keyboard.isDown(Phaser.Keyboard.F)) {
-			//	openChest(chest);
-			//}
 
 	},
-	//FOR DEBUGGING
+
+	//FOR DEBUGGING HITBOXES
 	// render: function() {
 
  	//    game.debug.physicsGroup(enemies);
