@@ -51,8 +51,11 @@ var key;
 var gotKey = 0;
 
 var box;
-
-var chest;
 var life = 100;
-var lifeText;
-var tridents;
+
+//Audio
+var BG;
+var inhale;
+var hurt;
+var Mclick;
+var eatSush;

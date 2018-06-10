@@ -9,13 +9,26 @@ Level3.prototype = {
 	    game.load.atlas('MOBSP', 'assets/img/MOBSP.png', 'assets/img/MOBSP.json');
 	    game.load.atlas('atlasItems', 'assets/img/tilemapspritesheet.png','assets/img/tilemapspritesheet.json');
 	    game.load.atlas('danny', 'assets/img/DannyDeDiver.png', 'assets/img/DannyDeDiver.json');
+	    game.load.audio('BGmusic', 'assets/audio/BGMusic.mp3');
+	    game.load.audio('eatSush', 'assets/audio/eatSush.mp3');
+	    game.load.audio('hurt', 'assets/audio/hurt.mp3');
+	    game.load.audio('inhale', 'assets/audio/inhale.mp3');
+
 	},
 
 	create: function() {
+
+		//creates audio
+		BG = game.add.audio('BGmusic', 1, true);
+		BG.play();
+		hurt = game.add.audio('hurt', 1, false);
+		eatSush = game.add.audio('eatSush', 1, false);
+		inhale = game.add.audio('inhale', 1, false);
    	
    		//initializes physics
 	    game.physics.startSystem(Phaser.Physics.ARCADE);
 	    air = 100;
+	    life = 100;
 	    //background
 	    background = game.add.sprite(0, 0,'atlasItems', 'starback');
 	    background.scale.setTo(3,3);
@@ -189,11 +202,13 @@ Level3.prototype = {
 		var hitdoor = game.physics.arcade.collide(monkas, door);
 
 		//when player hits enemey
-		game.physics.arcade.overlap(monkas,enemies,subLife,null,this);	
+		if(game.physics.arcade.overlap(monkas,enemies,subLife,null,this)) {
+			hurt.play();
+		}	
 
 		//Player eats sushi
 		if(game.physics.arcade.overlap(monkas,sushi,eatSushi,null,this)) {
-			//eating noise
+			eatSush.play();
 		}
 
 		//Code for decreasing hearts
@@ -357,7 +372,7 @@ Level3.prototype = {
 
 		//Player overlaping with a bubble
 		if(game.physics.arcade.overlap(monkas, bubbles, airF, null, this)) {
-			//noises effect goes here
+			inhale.play('', 0, 0.25, false);		
 		}
 
         //GamerOver state changer
@@ -367,6 +382,7 @@ Level3.prototype = {
 
         //temp state switcher
         if(hitdoor == true) {
+        	BG.destroy();
 			game.state.start('Level4');
 		}
 

@@ -10,13 +10,26 @@ Level1.prototype = {
 	    game.load.atlas('MOBSP', 'assets/img/MOBSP.png', 'assets/img/MOBSP.json');
 	    game.load.atlas('atlasItems', 'assets/img/tilemapspritesheet.png','assets/img/tilemapspritesheet.json');
 	    game.load.atlas('danny', 'assets/img/DannyDeDiver.png', 'assets/img/DannyDeDiver.json');
+	    game.load.audio('BGmusic', 'assets/audio/BGMusic.mp3');
+	    game.load.audio('eatSush', 'assets/audio/eatSush.mp3');
+	    game.load.audio('hurt', 'assets/audio/hurt.mp3');
+	    game.load.audio('inhale', 'assets/audio/inhale.mp3');
+
 	},
 
 	create: function() {
+
+		//creates audio
+		BG = game.add.audio('BGmusic', 1, true);
+		BG.play();
+		hurt = game.add.audio('hurt', 1, false);
+		eatSush = game.add.audio('eatSush', 1, false);
+		inhale = game.add.audio('inhale', 1, false);
 	   	
 		//starts physics 
 	    game.physics.startSystem(Phaser.Physics.ARCADE);
 	    air = 100;
+	    life = 100;
 	    //BACKGROUND:
 	    //background Top half
 	    background = game.add.tileSprite(0, 0, game.width, game.height, 'atlasItems', 'background');
@@ -120,6 +133,7 @@ Level1.prototype = {
 	    heart4.cameraOffset.setTo(170, 20);
 	    heart4.scale.setTo(.5, .5);
 		
+		//makes the air bar
 	    airbars = game.add.group();
 	    airbar1 = airbars.create(20, 20, 'bars', 'airbar9');
 	    airbar1.fixedToCamera = true;
@@ -185,11 +199,13 @@ Level1.prototype = {
 			var hitdoor = game.physics.arcade.collide(monkas, door);
 
 			//when player hits enemey
-			game.physics.arcade.overlap(monkas,enemies,subLife,null,this);
+			if(game.physics.arcade.overlap(monkas,enemies,subLife,null,this)) {
+				hurt.play();
+			}
 
 			//when player eats sushi
 			if(game.physics.arcade.overlap(monkas, sushi, eatSushi, null, this)) {
-				//noises effect goes here
+				eatSush.play();
 			}
 
 			//Code for decreasing hearts
@@ -355,12 +371,13 @@ Level1.prototype = {
 
 	        //state switcher
         	if(hitdoor == true) {
+        		BG.destroy();
 				game.state.start('Level2');
 			}
 
 			//if player touches bubbles
 			if(game.physics.arcade.overlap(monkas, bubbles, airF, null, this)) {
-
+				inhale.play('', 0, 0.25, false);
 			}
 
 

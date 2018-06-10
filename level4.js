@@ -10,13 +10,25 @@ Level4.prototype = {
 	    game.load.atlas('MOBSP', 'assets/img/MOBSP.png', 'assets/img/MOBSP.json');
 	    game.load.atlas('atlasItems', 'assets/img/tilemapspritesheet.png','assets/img/tilemapspritesheet.json');
 	    game.load.atlas('danny', 'assets/img/DannyDeDiver.png', 'assets/img/DannyDeDiver.json');
+	    game.load.audio('BGmusic', 'assets/audio/BGMusic.mp3');
+	    game.load.audio('eatSush', 'assets/audio/eatSush.mp3');
+	    game.load.audio('hurt', 'assets/audio/hurt.mp3');
+	    game.load.audio('inhale', 'assets/audio/inhale.mp3');
 	},
 
 	create: function() {
+
+		//creates audio
+		BG = game.add.audio('BGmusic', 1, true);
+		BG.play();
+		hurt = game.add.audio('hurt', 1, false);
+		eatSush = game.add.audio('eatSush', 1, false);
+		inhale = game.add.audio('inhale', 1, false);
    		
    		//initializes physics
 	    game.physics.startSystem(Phaser.Physics.ARCADE);
 	    air = 100;
+	    life = 100;
 	    //background
 	    background = game.add.sprite(0, 0,'atlasItems', 'starback');
 	    background.scale.setTo(3,3);
@@ -67,21 +79,19 @@ Level4.prototype = {
 	    //creates bubbles/ hitboxes
 	    bubbles = game.add.group();
 	    bubbles.enableBody = true; //sets physics on bubbles
-	    var bubble = bubbles.create(2850, 720, 'atlasItems', 'bubble');
-	    bubble.body.setSize(40, 60, 30, 50);
-	    bubble = bubbles.create(950, 200, 'atlasItems', 'bubble');
+
+	    var bubble = bubbles.create(1500, 250, 'atlasItems', 'bubble');
 	    bubble.body.setSize(40, 60, 50, 30);	
-	    bubble = bubbles.create(250, 2350, 'atlasItems', 'bubble');
-	    bubble.body.setSize(40, 60, 50, 30);
-	    bubble = bubbles.create(3250, 1800, 'atlasItems', 'bubble');
+	    bubble = bubbles.create(1050, 1900, 'atlasItems', 'bubble');
 	    bubble.body.setSize(40, 60, 50, 30);
 	    bubble = bubbles.create(3250, 2450, 'atlasItems', 'bubble');
 	    bubble.body.setSize(40, 60, 50, 30);
-	    bubble = bubbles.create(3800, 460, 'atlasItems', 'bubble');
+	    bubble = bubbles.create(4100, 620, 'atlasItems', 'bubble');
 	    bubble.body.setSize(40, 60, 50, 30);
-	    bubble = bubbles.create(4200, 460, 'atlasItems', 'bubble');
+	    bubble = bubbles.create(5400, 2130, 'atlasItems', 'bubble');
 	    bubble.body.setSize(40, 60, 50, 30);
-	    bubble = bubbles.create(4600, 1800, 'atlasItems', 'bubble');
+
+	    bubble = bubbles.create(1950, 2430, 'atlasItems', 'bubble');
 	    bubble.body.setSize(40, 60, 50, 30);
 	    bubbles.scale.setTo(0.5, 0.5);
 
@@ -189,11 +199,13 @@ Level4.prototype = {
 		var hitdoor = game.physics.arcade.collide(monkas, door);
 
 		//when player hits enemey
-		game.physics.arcade.overlap(monkas,enemies,subLife,null,this);	
+		if(game.physics.arcade.overlap(monkas,enemies,subLife,null,this)) {
+			hurt.play();
+		}	
 
 		//when player eats sushi
 		if(game.physics.arcade.overlap(monkas, sushi, eatSushi, null, this)) {
-			//noises effect goes here
+			eatSush.play();
 		}
 
 		//Code for decreasing hearts
@@ -353,7 +365,7 @@ Level4.prototype = {
 		}
 
 		if(game.physics.arcade.overlap(monkas, bubbles, airF, null, this)) {
-			//noises effect goes here
+			inhale.play('', 0, 0.25, false);	
 		}
 
         //GameOver state changer
@@ -363,6 +375,7 @@ Level4.prototype = {
 
         //temp state switcher
         if(hitdoor == true) {
+        	BG.destroy();
 			game.state.start('ending');
 		}
 

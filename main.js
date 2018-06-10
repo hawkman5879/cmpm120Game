@@ -8,9 +8,13 @@ MainMenu.prototype = {
 		//loading assets
 		game.load.image('Back', 'assets/img/background.png');
 		game.load.image('Mid', 'assets/img/midground.png');
+		game.load.audio('Mclick', 'assets/audio/menuclick.mp3');
 	},
 	create: function() {
 		console.log('MainMenu: create');
+
+		Mclick = game.add.audio('Mclick', 1, false);
+		
 
 		//midground
 		midground = game.add.sprite(0, 0, 'Mid');	
@@ -25,12 +29,19 @@ MainMenu.prototype = {
 	},
 	update: function() {
 		// main menu logic
-		if(game.input.keyboard.isDown(Phaser.Keyboard.R)) {
+		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
 			game.state.start('Story');
+			Mclick.play();
 		}
 		//goes to credits state
 		if(game.input.keyboard.isDown(Phaser.Keyboard.C)) {
 			game.state.start('credits');
+			Mclick.play();
+		}
+		//goes to instructions state
+		if(game.input.keyboard.isDown(Phaser.Keyboard.X)) {
+			game.state.start('instructions');
+			Mclick.play();
 		}
 	}
 }
@@ -40,10 +51,13 @@ var credits = function(game) {};
 credits.prototype = {
 	preload: function() {
 		console.log('MainMenu: preload');
-
+		game.load.audio('Mclick', 'assets/audio/menuclick.mp3');
 	},
 	create: function() {
 		console.log('MainMenu: create');
+
+		Mclick = game.add.audio('Mclick', 1, false);
+
 		game.add.text(115, 210, 'TEMP CREDITS STATE', { fontSize: '32px', fill: '#7B241C' });
 		game.add.text(115, 255, 'PRESS R TO START', { fontSize: '32px', fill: '#7B241C' });
 		game.add.text(115, 300, 'Goes Back to MainMenu', { fontSize: '32px', fill: '#7B241C' });
@@ -52,11 +66,38 @@ credits.prototype = {
 	},
 	update: function() {
 		//state switching logic
-		if(game.input.keyboard.isDown(Phaser.Keyboard.R)) {
+		if(game.input.keyboard.isDown(Phaser.Keyboard.C)) {
 			game.state.start('MainMenu');
+			Mclick.play();
 		}
 
 			
+	}
+}
+
+//Instruction STATE
+var instructions = function(game) {};
+instructions.prototype = {
+	preload: function() {
+		console.log('MainMenu: preload');
+
+		game.load.audio('Mclick', 'assets/audio/menuclick.mp3');
+
+	},
+	create: function() {
+		console.log('MainMenu: create');
+
+		Mclick = game.add.audio('Mclick', 1, false);
+
+		game.add.text(115, 210, 'TEMP Instruction STATE', { fontSize: '32px', fill: '#7B241C' });
+		game.add.text(115, 255, 'PRESS R TO START', { fontSize: '32px', fill: '#7B241C' });
+	},
+	update: function() {
+		// main menu logic
+		if(game.input.keyboard.isDown(Phaser.Keyboard.X)) {
+			game.state.start('MainMenu');
+			Mclick.play();
+		}
 	}
 }
 
@@ -77,7 +118,7 @@ Story.prototype = {
 	},
 	update: function() {
 		// main menu logic
-		if(game.input.keyboard.isDown(Phaser.Keyboard.R)) {
+		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
 			game.state.start('Level1');
 		}
 	}
@@ -244,6 +285,7 @@ function eatSushi(monkas, sushi) {
 //add states to StateManager and start MainMenu
 game.state.add('MainMenu', MainMenu);
 game.state.add('credits', credits);
+game.state.add('instructions', instructions);
 game.state.add('Story', Story);
 game.state.add('Level1', Level1);
 game.state.add('Level2', Level2);

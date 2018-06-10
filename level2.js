@@ -10,13 +10,26 @@ Level2.prototype = {
 	    game.load.atlas('MOBSP', 'assets/img/MOBSP.png', 'assets/img/MOBSP.json')
 	    game.load.atlas('atlasItems', 'assets/img/tilemapspritesheet.png','assets/img/tilemapspritesheet.json');
 	    game.load.atlas('danny', 'assets/img/DannyDeDiver.png', 'assets/img/DannyDeDiver.json');
+	    game.load.audio('BGmusic', 'assets/audio/BGMusic.mp3');
+	    game.load.audio('eatSush', 'assets/audio/eatSush.mp3');
+	    game.load.audio('hurt', 'assets/audio/hurt.mp3');
+	    game.load.audio('inhale', 'assets/audio/inhale.mp3');
 	},
 
 	create: function() {
+
+		//creates audio
+		BG = game.add.audio('BGmusic', 1, true);
+		BG.play();
+		hurt = game.add.audio('hurt', 1, false);
+		eatSush = game.add.audio('eatSush', 1, false);
+		inhale = game.add.audio('inhale', 1, false);
    		
    		//starts physics function
 	    game.physics.startSystem(Phaser.Physics.ARCADE);
 	    air = 100;
+	    life = 100;
+	    
 	    //background
 	    background = game.add.sprite(0, 0,'atlasItems', 'starback');
 	    background.scale.setTo(3,3);
@@ -65,7 +78,6 @@ Level2.prototype = {
 	    map.createFromObjects('furniture', 1259, 'MOBSP', 'drawers', true, true, furniture);
 	    map.createFromObjects('furniture', 1305, 'MOBSP', 'bench', true, true, furniture);
 	    map.createFromObjects('furniture', 1251, 'MOBSP', 'bigdrawers', true, true, furniture);
-
 
 	    //creates bubbles/ hitboxes
 	    bubbles = game.add.group();
@@ -125,6 +137,7 @@ Level2.prototype = {
 	    heart4.cameraOffset.setTo(170, 20);
 	    heart4.scale.setTo(.5, .5);
 		
+		//makes air bar
 	    airbars = game.add.group();
 	    airbar1 = airbars.create(20, 20, 'bars', 'airbar9');
 	    airbar1.fixedToCamera = true;
@@ -188,11 +201,13 @@ Level2.prototype = {
 		var hitdoor = game.physics.arcade.collide(monkas, door);	
 
 		//when player hits enemey
-		game.physics.arcade.overlap(monkas,enemies,subLife,null,this);	
+		if(game.physics.arcade.overlap(monkas,enemies,subLife,null,this)) {
+			hurt.play();
+		}	
 
 		//player eats sushi
 		if(game.physics.arcade.overlap(monkas, sushi, eatSushi, null, this)) {
-			//noises effect goes here
+			eatSush.play();
 		}
 
 		//adjusts health bar
@@ -362,12 +377,13 @@ Level2.prototype = {
 
 		//state switcher
         if(hitdoor == true) {
+        	BG.destroy();
 			game.state.start('Level3');
 		}
 
 		//if diver touches bubble
 		if(game.physics.arcade.overlap(monkas, bubbles, airF, null, this)) {
-			//noises effect goes here
+			inhale.play('', 0, 0.25, false);
 		}
 
 	},
