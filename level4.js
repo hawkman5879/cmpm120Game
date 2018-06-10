@@ -375,8 +375,9 @@ Level4.prototype = {
 
         //temp state switcher
         if(hitdoor == true) {
-        	BG.destroy();
+        	
 			game.state.start('ending');
+			BG.destroy();
 		}
 
 	},
